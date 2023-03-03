@@ -1,5 +1,6 @@
 import pathlib
 import urllib.parse
+import shutil
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -24,15 +25,28 @@ class SentinelDownloader:
     def __init__(self):
         self.root_url = "https://scihub.copernicus.eu/dhus/"
 
-    def is_product_online(self, product_id: str):
-        path_arguments = str(pathlib.PosixPath("odata/v1", f"Products('{product_id}')/Online/$value"))
+    def do_request(self, arguments: list, stream=False):
+        print(arguments)
+        path_arguments = "/".join(arguments)
+        print(path_arguments)
         full_url = urllib.parse.urljoin(self.root_url, path_arguments)
 
-        response = requests.get(full_url, auth=HTTPBasicAuth(os.getenv('USER'), os.getenv('PASS')))
-        if response.status_code is not 200:
+        response = requests.get(full_url, auth=HTTPBasicAuth(os.getenv('USER'), os.getenv('PASS')), stream=stream)
+        if response.status_code != 200:
             raise Exception(f"status {response.status_code}: {response.text}")
-        return response.text == "true"
+        return response
+
+    def is_product_online(self, product_id: str):
+        response_text = self.do_request(["odata/v1", f"Products('{product_id}')/Online/$value"]).text
+        return response_text == "true"
+
+    def download_product(self, product_id: str, download_path: str, try_to_download=True):
+        is_online = self.is_product_online(product_id)
+        if try_to_download and is_online:
+            response_raw = self.do_request(["odata/v1", f"Products('{product_id}')/$value"], stream=True).raw
+            with open(download_path, 'wb') as out_file:
+                shutil.copyfileobj(response_raw, out_file)
 
 
 s = SentinelDownloader()
-print(s.is_product_online("8364b44f-aa7f-4589-8695-44b7ed7b8f65"))
+s.download_product("8364b44f-aa7f-4589-8695-44b7ed7b8f65", "hahaha")
