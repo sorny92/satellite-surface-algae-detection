@@ -3,6 +3,7 @@ import os
 import pandas as pd
 from enum import Enum
 
+
 class Downloader:
     class ProductState(Enum):
         AVAILABLE = 1
@@ -12,7 +13,16 @@ class Downloader:
         self.api = SentinelAPI(user, password, 'https://apihub.copernicus.eu/apihub')
 
     def get_product_id(self, polygon, date) -> dict[str, dict]:
-        return self.api.query(polygon, date)
+        day, month, year = [int(x) for x in date.split("-")]
+        # TODO: Change this to user dates properly instead of formating with strings
+        from_date = f"20{year:>02}{month:>02}{day:>02}"  # yyyyMMdd
+        to_date = f"20{year:>02}{month:>02}{day + 1:>02}"  # yyyyMMdd
+
+        return self.api.query(polygon, (from_date, to_date),
+                              # Platform to Sentinel-2 as it's the only one we use as source of data
+                              platformname="Sentinel-2",
+                              # We only use this source of data
+                              processinglevel="Level-2A")
 
     def request_product(self, id: str) -> ProductState:
         self.api.download(id)
@@ -21,24 +31,11 @@ class Downloader:
 if __name__ == "__main__":
     data_path = "dataset/DATOS_12_04_23.csv"
     data = pd.read_csv(data_path)
-    #print(data)
-    print(data.loc[0])
-    polygon = data["POLYGON"][0]
-    date = data["Fecha"][0]
-
     d = Downloader(os.getenv('USER'), os.getenv('PASS'))
-    d.get_product_id(polygon, date)
-
-
-    #
-    # api.download("8364b44f-aa7f-4589-8695-44b7ed7b8f65")
-    # res = api.query("POLYGON((41.37 0.29, 41.37 0.43, 41.22 0.43, 41.22 0.29, 41.37 0.29))",
-    #                 date=("20230101", "20230120"),
-    #                 platformname='Sentinel-2',
-    #                 cloudcoverpercentage=(0, 30))
-# for v in res:
-#     print(v)
-#     for k in res[v]:
-#         print(f"    {k}")
-#         print(f"        {res[v][k]}")
-#     break
+    for idx in range(data.shape[0]):
+        print(data.loc[idx])
+        polygon = data["POLYGON"][idx]
+        date = data["Fecha"][idx]
+        product_list = d.get_product_id(polygon, date)
+        for k in product_list:
+            d.request_product(k)

@@ -1,50 +1,94 @@
+\documentclass[notitlepage]{report}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+
+\usepackage{titling}
+\usepackage{lipsum}
+
+\pretitle{\begin{center}\Huge\bfseries}
+\posttitle{\par\end{center}\vskip 0.5em}
+\preauthor{\begin{center}\Large\ttfamily}
+\postauthor{\end{center}}
+\predate{\par\large\centering}
+\postdate{\par}
+
+\title{Satellite surface algae detection}
+\author{Esteve Soria}
+%\date{\today}
+\begin{document}
+
+    \maketitle
+    \thispagestyle{empty}
+
+    \begin{abstract}
+        \lipsum[1]
+    \end{abstract}
 
 
-Interesting libraries for loading images from Sentinel-2:
-
-https://github.com/sertit/eoreader
+    \section*{Introduction}
 
 
-Maybe:
-https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/what-is-arcpy-.htm
+    \section*{Related work}
+    Interesting libraries for loading images from Sentinel-2:
 
-This looks really nice as it also allows to overlay on maps natively:
-https://geopandas.org/en/stable/getting_started/introduction.html
+    https://github.com/sertit/eoreader
+    \newline
+    Maybe:
 
-This project is lit!
-https://github.com/satellite-image-deep-learning/techniques
-https://github.com/acgeospatial/awesome-earthobservation-code
+    https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/what-is-arcpy-.htm
+    \newline
+    This looks really nice as it also allows to overlay on maps natively:
 
-Lots of datasets!
-https://github.com/Seyed-Ali-Ahmadi/Awesome_Satellite_Benchmark_Datasets
+    https://geopandas.org/en/stable/getting\_started/introduction.html
+    \newline
+    This project is lit!
 
-Doing self-supervised learning could be useful to fight the data scarcity.
-As the dataset will be small, a self-training step will be useful to generate
-a powerful embedding space to the train a classifer:
-https://github.com/satellite-image-deep-learning/techniques#self-supervised-unsupervised--contrastive-learning
-https://ermongroup.github.io/blog/tile2vec/
-https://github.com/vladan-stojnic/CMC-RSSR
+    https://github.com/satellite-image-deep-learning/techniques
+
+    https://github.com/acgeospatial/awesome-earthobservation-code
+    \newline
+    Lots of datasets!
+
+    https://github.com/Seyed-Ali-Ahmadi/Awesome\_Satellite\_Benchmark\_Datasets
+    \newline
+    Interesting survery here:
+
+    https://github.com/VIROBO-15/Transformer-in-Remote-Sensing
+    \newline
+    To visualize custom maps:
+
+    https://python-visualization.github.io/folium/quickstart.html
+
+    https://github.com/giswqs/geemap
+    \newline
+    Too many resources for satellite imaging:
+
+    https://github.com/sacridini/Awesome-Geospatial
+    \newline
+    Is this really useful?
+
+    https://github.com/microsoft/torchgeo
+    \newline
+    Hmmm video results....
+
+    https://github.com/acgeospatial/awesome-earthobservation-code#visualisation
+
+    \subsection*{Image segmentation}
 
 
-Interesting survery here:
-https://github.com/VIROBO-15/Transformer-in-Remote-Sensing
+    \section*{Method}
+
+    Doing self-supervised learning could be useful to fight the data scarcity.
+    As the dataset will be small, a self-training step will be useful to generate
+    a powerful embedding space to the train a classifer:
+    https://github.com/satellite-image-deep-learning/techniques#self-supervised-unsupervised--contrastive-learning
+    https://ermongroup.github.io/blog/tile2vec/
+    https://github.com/vladan-stojnic/CMC-RSSR
 
 
-To visualize custom maps:
-https://python-visualization.github.io/folium/quickstart.html
-https://github.com/giswqs/geemap
+    \section*{Experiments}
 
 
-
-Too many resources for satellite imaging:
-https://github.com/sacridini/Awesome-Geospatial
+    \section*{Conclusions}
 
 
-Is this really useful?
-https://github.com/microsoft/torchgeo
-
-
-
-
-Hmmm video results....
-https://github.com/acgeospatial/awesome-earthobservation-code#visualisation
+\end{document}
