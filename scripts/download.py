@@ -1,4 +1,4 @@
-from sentinelsat import SentinelAPI, read_geojson, geojson_to_wkt
+from sentinelsat import SentinelAPI
 import os
 import pandas as pd
 from enum import Enum
