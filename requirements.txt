@@ -1,2 +1,5 @@
 sentinelsat
-rasterio
+eoreader
+numpy
+pandas
+geopandas
