@@ -28,8 +28,7 @@ class Downloader:
         self.api.download(id)
 
 
-if __name__ == "__main__":
-    data_path = "dataset/DATOS_12_04_23.csv"
+def download_all_data(data_path):
     data = pd.read_csv(data_path)
     d = Downloader(os.getenv('USER'), os.getenv('PASS'))
     for idx in range(data.shape[0]):
@@ -39,3 +38,8 @@ if __name__ == "__main__":
         product_list = d.get_product_id(polygon, date)
         for k in product_list:
             d.request_product(k)
+
+
+if __name__ == "__main__":
+    data_path = "dataset/DATOS_12_04_23.csv"
+    download_all_data(data_path)
