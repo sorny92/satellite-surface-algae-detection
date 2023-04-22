@@ -3,3 +3,8 @@ eoreader
 numpy
 pandas
 geopandas
+
+hvplot
+geoviews
+pyproj
+cartopy

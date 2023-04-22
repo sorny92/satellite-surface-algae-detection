@@ -1,7 +1,8 @@
 import geopandas as gpd
-import rasterio.plot
 
+import rasterio
 from rasterio.windows import Window, from_bounds
+
 from eoreader.reader import Reader
 from eoreader.bands import GREEN, NDVI, CLOUDS, BLUE
 from matplotlib import pyplot as plt
@@ -9,6 +10,13 @@ import pandas as pd
 from shapely import wkt
 from scripts.download import Downloader
 import os
+from shapely.geometry import box
+
+import hvplot.pandas
+import hvplot.xarray
+
+
+# hvplot.extension('matplotlib')
 
 def load(prod, window, band):
     """
@@ -20,6 +28,7 @@ def load(prod, window, band):
     )
     prod.clean_tmp()
     return arr[band]
+
 
 if __name__ == "__main__":
     data = pd.read_csv("dataset/DATOS_12_04_23.csv")
@@ -34,21 +43,36 @@ if __name__ == "__main__":
 
         wkt_polygon = wkt.loads(polygon)
         polygon = gpd.GeoDataFrame(index=[0], crs="EPSG:4326", geometry=[wkt_polygon])
-        polygon = polygon.to_crs(prod.crs())
-        polygon.plot()
+        polygon_proj = polygon.to_crs(prod.crs())
         window_bounds = polygon.bounds.values[0]
         print(polygon)
         print(window_bounds)
+        print(window_bounds.shape)
 
-        with rasterio.open(str(prod.get_band_paths([GREEN])[GREEN])) as ds:
-            window_pix = from_bounds(*window_bounds, ds.transform)
+        full_prod = load(prod, polygon, GREEN)
+        bounds = full_prod.rio.bounds()
+        window_bounds_gpd = gpd.GeoDataFrame(
+            geometry=[box(*window_bounds)],
+            crs=polygon_proj.crs
+        )
 
-        full_image = load(prod, None, GREEN)
-        img = load(prod, polygon, GREEN)
-        print(full_image.shape)
-        bands = prod.load([GREEN])
-        full_image[0, ::10, ::10].plot()
-        bands[GREEN][:, ::10, ::10].plot()
-        # prod.plot()
-        plt.show()
+        print(bounds)
+
+        plot = full_prod[0, ::1, ::1].hvplot.quadmesh(
+            "x", "y",
+            coastline="10m",
+            cmap="bwy_r",
+            tiles=True,
+            frame_width=1920,
+            frame_height=1080
+        ) * window_bounds_gpd.hvplot(
+            facecolor=(0, 0, 0, 0),
+            edgecolor="g", linewidth=4,
+        ) * polygon.hvplot(
+            facecolor=(0, 0, 0, 0),
+            edgecolor="b", linewidth=4,
+            xlim=(bounds[0], bounds[2]),
+            ylim=(bounds[1], bounds[3])
+        )
+        hvplot.show(plot)
         break
