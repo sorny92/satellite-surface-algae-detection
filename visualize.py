@@ -33,7 +33,7 @@ if __name__ == "__main__":
         prod = Reader().open(filename)
 
         wkt_polygon = wkt.loads(polygon)
-        polygon = gpd.GeoDataFrame(index=[0], crs=prod.crs(), geometry=[wkt_polygon])
+        polygon = gpd.GeoDataFrame(index=[0], crs="EPSG:4326", geometry=[wkt_polygon])
         polygon = polygon.to_crs(prod.crs())
         polygon.plot()
         window_bounds = polygon.bounds.values[0]
