@@ -1,6 +1,7 @@
 from sentinelsat import SentinelAPI
 import os
 import pandas as pd
+import datetime
 from enum import Enum
 
 
@@ -10,13 +11,13 @@ class Downloader:
         REQUESTED = 2
 
     def __init__(self, user, password):
-        self.api = SentinelAPI(user, password, 'https://apihub.copernicus.eu/apihub')
+        self.api = SentinelAPI(user, password, 'https://scihub.copernicus.eu/dhus/')
 
     def get_product_id(self, polygon, date) -> dict[str, dict]:
         day, month, year = [int(x) for x in date.split("-")]
-        # TODO: Change this to user dates properly instead of formating with strings
-        from_date = f"20{year:>02}{month:>02}{day:>02}"  # yyyyMMdd
-        to_date = f"20{year:>02}{month:>02}{day + 1:>02}"  # yyyyMMdd
+        date = datetime.datetime(year, month, day)
+        from_date = date.strftime('%Y%m%d')
+        to_date = (date + datetime.timedelta(days=1)).strftime('%Y%m%d')
 
         return self.api.query(polygon, (from_date, to_date),
                               # Platform to Sentinel-2 as it's the only one we use as source of data
@@ -41,5 +42,5 @@ def download_all_data(data_path):
 
 
 if __name__ == "__main__":
-    data_path = "dataset/DATOS_12_04_23.csv"
+    data_path = "dataset/DATOS_27_05_23.csv"
     download_all_data(data_path)
