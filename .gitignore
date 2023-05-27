@@ -2,3 +2,5 @@
 .idea/
 docs/*
 !docs/*.pdf
+.ipynb*
+__pycache__/

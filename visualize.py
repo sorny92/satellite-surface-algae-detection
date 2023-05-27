@@ -56,23 +56,22 @@ if __name__ == "__main__":
             crs=polygon_proj.crs
         )
 
-        print(bounds)
-
         plot = full_prod[0, ::1, ::1].hvplot.quadmesh(
             "x", "y",
             coastline="10m",
             cmap="bwy_r",
             tiles=True,
-            frame_width=1920,
-            frame_height=1080
+            frame_width=1270,
+            frame_height=720
         ) * window_bounds_gpd.hvplot(
             facecolor=(0, 0, 0, 0),
             edgecolor="g", linewidth=4,
-        ) * polygon.hvplot(
-            facecolor=(0, 0, 0, 0),
-            edgecolor="b", linewidth=4,
-            xlim=(bounds[0], bounds[2]),
-            ylim=(bounds[1], bounds[3])
-        )
+        ) \
+        #        * polygon.hvplot(
+        #     facecolor=(0, 0, 0, 0),
+        #     edgecolor="b", linewidth=4,
+        #     xlim=(bounds[0], bounds[2]),
+        #     ylim=(bounds[1], bounds[3])
+        # )
         hvplot.show(plot)
         break
