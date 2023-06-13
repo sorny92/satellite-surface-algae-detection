@@ -25,6 +25,41 @@
 
 
     \section*{Introduction}
+    The goal of the project is to be able to automatically detect the location of these plants 
+    floating in the waater.
+    This bodies have been located in a few locations of Spain as X, Y and Z. The figures X and Y
+    show how this bodies of plants look like from satellite.
+    
+    The source of the images is the pair of satellites Sentinel 2. This satellites haven been operationg since X year providing remote sensing capablities from the range X, Y of the earth.
+    This satellite can pass above the same point every X days allowing researchers and companies to
+    track specificic locations to study how they change on time.
+    This satellite has 12 different bands or wavelengths where it can see. The bands are X, blah blah
+    each one of them are useful for different fields.
+    Examples of this are for example the tracking of crops as plant can be measured as X.
+    Another use is the tracking of water levels of different lakes or the effect of flooding and
+    natural catasprohies.
+    
+    Remote sensing has it's own set of tools, approaches and problems.
+    Some research is approached as a traditional computer vision problem were the researcher will
+    generated their own heuristics to be able to track the metric they are intrested into.
+    An example of this is the NVDI metric which is a simple calculation around some of the bands of 
+    sentinel which results in a relly useful tool to identify clorophil based life and how they
+    propagate.
+    One of the problems of the previous approach is it own simplicity, it's really good at measuring
+    plants but can provide not really useful values for other cases that are not related.
+    Machine learning techniques can be useful for remote sensing to avoid the problem of false
+    positives in simple heuristics.
+    
+    Satellite imaging provides an enormous quantity of data. To be specific about the sentinel-2
+    platform, this generates what is called tiles of the same coordinates. This images have a size
+    of 10000x10000 pixels with a resolution of X on some bands and a resolution of Y in other bands.
+    The amount of labelled data is at the scale of the whole earth, the problem is curating this
+    data to something useful.
+    
+    This research is trying to improve the detection rate of this bodies of plants in lakes. 
+    Currently there are some lakes that are being tracked in a manual way where the researchers 
+    would apply several filters to detect them. Obviously, this approach can't scale to more lakes
+    without more operators and not even consider analising this bodies at a global scale.
 
 
     \section*{Related work}
@@ -73,7 +108,26 @@
     https://github.com/acgeospatial/awesome-earthobservation-code#visualisation
 
     \subsection*{Image segmentation}
-
+    This problem can be solved in different ways. The general idea is give the researchers more data
+    of this bodies so they can analyse where, why and when they will appear but also how do they
+    behave on time.
+    
+    Image segmentation arises as an obvious approach to the problem. We have images of the whole earth
+    if we can have enough images with ground truths we could train a system to segment this bodies in
+    each tile so as the satellite is moving around the earth an automated system could run when these
+    tiles are being generated in real-time.
+    
+    The problem of this approach is th generation of enough labelled data to become useful.
+    Image segmentation has been traditionally expensive to label due to the nature of the label, as
+    you need a value per pixel.
+    This can be reduced with new approaches as SAM. SAM allows segmenting anything based on a prior
+    value. This prior value can be a point or a bounding box. This tool results really useful as
+    the dataset we posses consists of few images with tenths of boundingboxes or the ROI.
+    SAM could be used to find the edges of this bounding box so then the problem can be approached
+    as a segmentation.
+    
+    \subsection*{Image retreival}
+    
 
     \section*{Method}
 
@@ -96,6 +150,8 @@
 
 
     \section*{Experiments}
+    
+    \section*{Future work}
 
 
     \section*{Conclusions}
