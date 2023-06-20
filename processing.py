@@ -2,6 +2,7 @@ from shapely import geometry
 from eoreader.products import product
 import rasterio
 import numpy as np
+from utils.bands import band_resolutions
 
 
 def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: int):
@@ -42,19 +43,35 @@ def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: 
     """
     sentinel2_tile_size = (10980, 10980)
     bbox_prod = prod.footprint().bounds.values[0]
-    #print(bbox_prod)
+    # print(bbox_prod)
     left, bottom, right, top = polygon.bounds.values[0]
-    #print(left, bottom, right, top)
+    # print(left, bottom, right, top)
     at = rasterio.transform.from_bounds(*bbox_prod, sentinel2_tile_size[0], sentinel2_tile_size[1])
-    #print(at)
+    # print(at)
     r, c = rasterio.transform.rowcol(at, [left, right], [bottom, top])
-    #rows_center = np.mean(r)
+    # rows_center = np.mean(r)
     rows_center = r[0]
-    #print(rows_center)
-    #columns_center = np.mean(c)
+    # print(rows_center)
+    # columns_center = np.mean(c)
     columns_center = c[0]
-    #print(columns_center)
+    # print(columns_center)
 
-    x, y = rasterio.transform.xy(at, [rows_center-window_size, rows_center+window_size], [columns_center-window_size, columns_center+window_size])
-    #print(x, y)
+    x, y = rasterio.transform.xy(at, [rows_center - window_size, rows_center + window_size],
+                                 [columns_center - window_size, columns_center + window_size])
+    # print(x, y)
     return np.array([x[0], y[1], x[1], y[0]])
+
+
+def generate_stack(prod, bands, window, out_shape):
+    bands_data = []
+    for band in bands:
+        arr = prod.stack(
+            band,
+            window=window,
+            resolution=band_resolutions[band]
+        )
+        bands_data.append(arr.rio.reproject(
+            arr.rio.crs,
+            shape=out_shape,
+            resampling=rasterio.enums.Resampling.bilinear,
+        ))
