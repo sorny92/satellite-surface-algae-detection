@@ -1,8 +1,10 @@
+from eoreader.bands import SpectralBandNames
 from shapely import geometry
 from eoreader.products import product
 import rasterio
 import numpy as np
 from utils.bands import band_resolutions
+import xarray
 
 
 def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: int):
@@ -62,16 +64,24 @@ def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: 
     return np.array([x[0], y[1], x[1], y[0]])
 
 
-def generate_stack(prod, bands, window, out_shape):
+def generate_stack(prod, bands, window, resample=True):
     bands_data = []
+    biggest_shape = None
     for band in bands:
         arr = prod.stack(
             band,
             window=window,
             resolution=band_resolutions[band]
         )
-        bands_data.append(arr.rio.reproject(
-            arr.rio.crs,
-            shape=out_shape,
-            resampling=rasterio.enums.Resampling.bilinear,
-        ))
+        if band is SpectralBandNames.BLUE:
+            biggest_shape = arr.shape
+    if resample:
+        for idx, band_data in enumerate(bands_data):
+            resampled_band = band_data.rio.reproject(
+                band_data.rio.crs,
+                shape=biggest_shape[1:],
+                resampling=rasterio.enums.Resampling.bilinear,
+            )
+            band_data[idx] = resampled_band
+        bands_data = xarray.concat(bands_data, dim="z", join="override")
+    return bands_data
