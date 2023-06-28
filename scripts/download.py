@@ -1,3 +1,5 @@
+import pathlib
+
 from sentinelsat import SentinelAPI
 import os
 import pandas as pd
@@ -29,8 +31,8 @@ class Downloader:
         self.api.download(id)
 
 
-def download_all_data(data_path):
-    data = pd.read_csv(data_path)
+def download_all_data(path: pathlib.Path):
+    data = pd.read_csv(path)
     d = Downloader(os.getenv('USER'), os.getenv('PASS'))
     for idx in range(data.shape[0]):
         print(data.loc[idx])
@@ -42,5 +44,5 @@ def download_all_data(data_path):
 
 
 if __name__ == "__main__":
-    data_path = "dataset/DATOS_27_05_23.csv"
+    data_path = pathlib.Path("dataset", "raw_data", "DATOS_27_05_23.csv")
     download_all_data(data_path)

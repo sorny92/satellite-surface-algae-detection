@@ -17,7 +17,7 @@ def load(prod, window, band):
     return arr[band]
 
 
-data = pd.read_csv("dataset/DATOS_12_04_23.csv")
+data = pd.read_csv("dataset/raw_data/DATOS_12_04_23.csv")
 
 for idx in range(data.shape[0]):
     print(data.loc[idx])

@@ -1,13 +1,13 @@
 from eoreader.bands import SpectralBandNames
-from shapely import geometry
 from eoreader.products import product
 import rasterio
 import numpy as np
 from utils.bands import band_resolutions
 import xarray
+from logging import debug, warning, info
 
 
-def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: int):
+def get_bbox_with_window(prod: product, polygon, window_size: int):
     """
     Retrieves a bounding box with a specified window size around a given polygon within a product.
 
@@ -43,6 +43,7 @@ def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: 
         # Print the resulting bounding box
         print(bbox)
     """
+    info("Extract squared bbox from a product")
     sentinel2_tile_size = (10980, 10980)
     bbox_prod = prod.footprint().bounds.values[0]
     # print(bbox_prod)
@@ -61,6 +62,7 @@ def get_bbox_with_window(prod: product, polygon: geometry.Polygon, window_size: 
     x, y = rasterio.transform.xy(at, [rows_center - window_size, rows_center + window_size],
                                  [columns_center - window_size, columns_center + window_size])
     # print(x, y)
+    info(f"The bbox is: {np.array([x[0], y[1], x[1], y[0]])}")
     return np.array([x[0], y[1], x[1], y[0]])
 
 
@@ -75,6 +77,8 @@ def generate_stack(prod, bands, window, resample=True):
         )
         if band is SpectralBandNames.BLUE:
             biggest_shape = arr.shape
+            info(biggest_shape)
+        bands_data.append(arr)
     if resample:
         for idx, band_data in enumerate(bands_data):
             resampled_band = band_data.rio.reproject(
@@ -82,6 +86,7 @@ def generate_stack(prod, bands, window, resample=True):
                 shape=biggest_shape[1:],
                 resampling=rasterio.enums.Resampling.bilinear,
             )
-            band_data[idx] = resampled_band
+            bands_data[idx] = resampled_band
         bands_data = xarray.concat(bands_data, dim="z", join="override")
+        debug(bands_data.shape)
     return bands_data

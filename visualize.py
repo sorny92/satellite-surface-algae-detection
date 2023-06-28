@@ -31,7 +31,7 @@ def load(prod, window, band):
 
 
 if __name__ == "__main__":
-    data = pd.read_csv("dataset/DATOS_12_04_23.csv")
+    data = pd.read_csv("dataset/raw_data/DATOS_12_04_23.csv")
     d = Downloader(os.getenv('USER'), os.getenv('PASS'))
     for idx in range(data.shape[0]):
         print(data.loc[idx])
