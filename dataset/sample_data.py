@@ -17,10 +17,12 @@ def get_roi_from_polygon(polygon_string: str, product=None):
         return polygon
 
 
-def visualize_stack(image_stack):
+def visualize_stack(image_stack, bounding_box=None):
     import cv2
     import numpy as np
-    plt.figure(figsize=(10, 10))
+
+    # Create figure and axes
+    fig, ax = plt.subplots()
     chop = da.concatenate([image_stack[3:4], image_stack[2:3], image_stack[1:2]])
     chop = da.moveaxis(chop, 0, -1)
     chop *= 255
@@ -41,7 +43,16 @@ def visualize_stack(image_stack):
     # Converting image from LAB Color model to BGR color spcae
     enhanced_img = cv2.cvtColor(limg, cv2.COLOR_LAB2RGB)
 
-    plt.imshow(enhanced_img)
+    import matplotlib.patches as patches
+    ax.imshow(enhanced_img)
+    # Create a Rectangle patch
+    rect = patches.Rectangle((bounding_box[0], bounding_box[3]),
+                             bounding_box[2] - bounding_box[3], bounding_box[2] - bounding_box[1],
+                             linewidth=1, edgecolor='r',
+                             facecolor='none')
+
+    # Add the patch to the Axes
+    ax.add_patch(rect)
     plt.show()
 
 
@@ -62,4 +73,5 @@ if __name__ == "__main__":
             polygon = get_roi_from_polygon(polygon_str, prod)
             window = pp.get_bbox_from_window(polygon, 64)
             stack = pp.generate_stack(prod.get_existing_bands(), window)
-            visualize_stack(stack)
+            bbox_relative = pp.get_xy_relative_to_window(window, polygon)
+            visualize_stack(stack, bbox_relative)

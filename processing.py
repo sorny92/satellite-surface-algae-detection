@@ -15,12 +15,12 @@ class ProcessProduct:
         self._product_footprint = None
         self._affine_transform = None
 
-    def get_affine_transform(self):
+    def get_product_affine_transform(self):
         if not self._affine_transform:
             if not self._product_footprint:
                 self._product_footprint = self._prod.footprint()
-            bbox_prod = self._product_footprint.bounds.values[0]
-            self._affine_transform = rasterio.transform.from_bounds(*bbox_prod,
+            bbox_product = self._product_footprint.bounds.values[0]
+            self._affine_transform = rasterio.transform.from_bounds(*bbox_product,
                                                                     self.sentinel2_tile_size[0],
                                                                     self.sentinel2_tile_size[1])
         return self._affine_transform
@@ -62,15 +62,27 @@ class ProcessProduct:
         """
         info("Extract squared bbox from a product")
         left, bottom, right, top = polygon.bounds.values[0]
-        at = self.get_affine_transform()
+        at = self.get_product_affine_transform()
         r, c = rasterio.transform.rowcol(at, [left, right], [bottom, top])
-        rows_center = r[0]
-        columns_center = c[0]
-
-        x, y = rasterio.transform.xy(at, [rows_center - window_size, rows_center + window_size],
-                                     [columns_center - window_size, columns_center + window_size])
+        rows_center = np.floor(np.mean(r))
+        columns_center = np.floor(np.mean(c))
+        window_size /= 2
+        x, y = rasterio.transform.xy(at, [rows_center - window_size, rows_center + window_size - 1],
+                                     [columns_center - window_size,
+                                      columns_center + window_size - 1])
         info(f"The bbox is: {np.array([x[0], y[1], x[1], y[0]])}")
         return np.array([x[0], y[1], x[1], y[0]])
+
+    def get_xy_relative_to_window(self, window, polygon):
+        at = self.get_product_affine_transform()
+        left, bottom, right, top = polygon.bounds.values[0]
+        r_w, c_w = rasterio.transform.rowcol(at, [window[0], window[2]], [window[1], window[3]])
+        r, c = rasterio.transform.rowcol(at, [left, right], [bottom, top])
+
+        return np.array([r[1] - r_w[1],
+                         r[0] - r_w[1],
+                         c[1] - c_w[0],
+                         c[0] - c_w[0]])
 
     def generate_stack(self, bands, window, resample=True):
         bands_data = []
