@@ -61,7 +61,7 @@ class ProcessProduct:
             print(bbox)
         """
         info("Extract squared bbox from a product")
-        left, bottom, right, top = polygon.bounds.values[0]
+        left, top, right, bottom = polygon.bounds.values[0]
         at = self.get_product_affine_transform()
         r, c = rasterio.transform.rowcol(at, [left, right], [bottom, top])
         rows_center = np.floor(np.mean(r))
@@ -75,14 +75,14 @@ class ProcessProduct:
 
     def get_xy_relative_to_window(self, window, polygon):
         at = self.get_product_affine_transform()
-        left, bottom, right, top = polygon.bounds.values[0]
+        left, top, right, bottom = polygon.bounds.values[0]
         r_w, c_w = rasterio.transform.rowcol(at, [window[0], window[2]], [window[1], window[3]])
         r, c = rasterio.transform.rowcol(at, [left, right], [bottom, top])
 
-        return np.array([r[1] - r_w[1],
-                         r[0] - r_w[1],
+        return np.array([c[0] - c_w[0],
                          c[1] - c_w[0],
-                         c[0] - c_w[0]])
+                         r[0] - r_w[1],
+                         r[1] - r_w[1]])
 
     def generate_stack(self, bands, window, resample=True):
         bands_data = []

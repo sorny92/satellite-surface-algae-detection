@@ -46,8 +46,9 @@ def visualize_stack(image_stack, bounding_box=None):
     import matplotlib.patches as patches
     ax.imshow(enhanced_img)
     # Create a Rectangle patch
-    rect = patches.Rectangle((bounding_box[0], bounding_box[3]),
-                             bounding_box[2] - bounding_box[3], bounding_box[2] - bounding_box[1],
+    rect = patches.Rectangle((bounding_box[0], bounding_box[2]),
+                             bounding_box[1] - bounding_box[0],
+                             bounding_box[3] - bounding_box[2],
                              linewidth=1, edgecolor='r',
                              facecolor='none')
 
