@@ -17,7 +17,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \title{Satellite surface algae detection}
 
-    \author{\IEEEauthorblockN{1\textsuperscript{st} Esteve Soria Fabián}
+    \author{\IEEEauthorblockN{Esteve Soria Fabián}
     %\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
     %\textit{name of organization (of Aff.)}\\
     esofabian@gmail.com}
@@ -31,22 +31,41 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \maketitle
 
     \begin{abstract}
-        \lipsum[1]
+        The Copernicus programme~\cite{whatiscopernicus} is an Earth observation component of the European Union Space
+        Programme.
+        One of the missions inside the programme is sentinel-2\cite{sentinel-2} with 2 satellites orbiting around the
+        earth.
+        The two satellites, Sentinel-2A and Sentinel-2B can provide images in 13 different bands with a resolution up
+        to 10m.
+        Bands range from infrared through the visible spectrum to short wave infrared.
+        The programme with its policy of free access allows scientists and researchers to obtain data for several
+        research fields as crop, glacier or lake monitoring.
+
+        Water quality monitoring is the field to focus our attention.
+        During the study of several lakes in the territory of Spain, patches of an invasive specie were found
+        floating in the water.
+        Finding out when, where and why these plants appear is of great interest.
+        Its detection is a manual process through the use of common remote-sensing indices as NDVI\cite{NDVIsource}
+        and water segmentation.
+        The problem of this approach is that its not very robust for a global scale search.
+
+        This work proposes an automatic search system of these form of life through computer vision systems to
+        achieve an end-to-end detection.
     \end{abstract}
 
     \begin{IEEEkeywords}
-        component, formatting, style, styling, insert
+        remote-sensing, computer vision, deep-learning, image retrieval
     \end{IEEEkeywords}
 
 
     \section{Introduction}
     The goal of the project is to be able to automatically detect the location of these plants
-    floating in the waater.
+    floating in the water.
     This bodies have been located in a few locations of Spain as X, Y and Z. The figures X and Y
     show how this bodies of plants look like from satellite.
 
     The source of the images is the pair of satellites Sentinel 2. This satellites haven been operationg since X year
-    providing remote sensing capablities from the range X, Y of the earth.
+    providing remote sensing capabilities from the range X, Y of the earth.
     This satellite can pass above the same point every X days allowing researchers and companies to
     track specific locations to study how they change on time.
     This satellite has 12 different bands or wavelengths where it can see. The bands are X, blah blah
@@ -101,8 +120,6 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     SAM could be used to find the edges of this bounding box so then the problem can be approached
     as a segmentation.
 
-    Eurosat dataset\cite{helber2019eurosat} is a sentinel-2 dataset.
-
     \subsection{Image retreival}
 
     \subsection{Image segmentation}
@@ -110,10 +127,21 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \subsection{Image classificacion}
 
 
-    \section{Datasets}
+    \section{Dataset}
+    To work on this problem a small dataset has been gathered with 140 labelled points.
+    This dataset has been captured manually by the researchers at Universidad de Valencia.
+    The labelled data consists in table with a ROI defined by it's coordinates and the date
+    of the image where it was located.
+    With that information the image can be extracted from the sentinel-2 data
+
+    The sentinel-2 data can be loaded with the use of EOReader\cite{eoreader_paper}
+
+    Eurosat dataset\cite{helber2019eurosat} is a sentinel-2 dataset.
 
 
     \section{Methods}
+
+
 
     Doing self-supervised learning could be useful to fight the data scarcity.\cite{OKELLY1987393}
     As the dataset will be small, a self-training step will be useful to generate
