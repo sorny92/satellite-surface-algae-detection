@@ -62,7 +62,7 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
     logging.basicConfig(level=logging.INFO)
-    data = pd.read_csv("dataset/raw_data/DATOS_12_04_23.csv")
+    data = pd.read_csv("dataset/raw_data/DATOS_27_05_23.csv")
 
     for filename in data["NOMBRE_FICHERO"].unique():
         prod = Reader().open(filename)
