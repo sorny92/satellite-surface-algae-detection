@@ -1,5 +1,7 @@
+import logging
 import pathlib
 
+import sentinelsat.exceptions
 from sentinelsat import SentinelAPI
 import os
 import pandas as pd
@@ -28,7 +30,10 @@ class Downloader:
                               processinglevel="Level-2A")
 
     def request_product(self, id: str) -> ProductState:
-        self.api.download(id)
+        try:
+            self.api.download(id)
+        except sentinelsat.exceptions.LTATriggered:
+            logging.warning(f"{id} is going to be retreived from long term archive")
 
 
 def download_all_data(path: pathlib.Path):
