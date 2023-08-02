@@ -4,3 +4,4 @@ docs/*
 !docs/*.pdf
 .ipynb*
 __pycache__/
+dataset/EuroSAT/EuroSAT_MS*
