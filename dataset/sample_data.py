@@ -12,7 +12,7 @@ def get_roi_from_polygon(polygon_string: str, product=None):
     wkt_polygon = wkt.loads(polygon_string)
     polygon = gpd.GeoDataFrame(index=[0], crs="EPSG:4326", geometry=[wkt_polygon])
     if product:
-        return polygon.to_crs(prod.crs())
+        return polygon.to_crs(product.crs())
     else:
         return polygon
 

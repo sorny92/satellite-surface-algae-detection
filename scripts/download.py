@@ -1,3 +1,4 @@
+import logging
 import pathlib
 
 import sentinelsat.exceptions
@@ -32,7 +33,7 @@ class Downloader:
         try:
             self.api.download(id)
         except sentinelsat.exceptions.LTATriggered:
-            print("Request download")
+            logging.warning(f"{id} is going to be retreived from long term archive")
 
 
 def download_all_data(path: pathlib.Path):
