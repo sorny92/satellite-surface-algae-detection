@@ -20,6 +20,8 @@ def get_roi_from_polygon(polygon_string: str, product=None):
 def visualize_stack(image_stack, bounding_box=None):
     import cv2
     import numpy as np
+    import matplotlib.pyplot as plt
+    import dask.array as da
 
     # Create figure and axes
     fig, ax = plt.subplots()
@@ -45,22 +47,20 @@ def visualize_stack(image_stack, bounding_box=None):
 
     import matplotlib.patches as patches
     ax.imshow(enhanced_img)
-    # Create a Rectangle patch
-    rect = patches.Rectangle((bounding_box[0], bounding_box[2]),
-                             bounding_box[1] - bounding_box[0],
-                             bounding_box[3] - bounding_box[2],
-                             linewidth=1, edgecolor='r',
-                             facecolor='none')
+    if bounding_box:
+        # Create a Rectangle patch
+        rect = patches.Rectangle((bounding_box[0], bounding_box[2]),
+                                 bounding_box[1] - bounding_box[0],
+                                 bounding_box[3] - bounding_box[2],
+                                 linewidth=1, edgecolor='r',
+                                 facecolor='none')
 
-    # Add the patch to the Axes
-    ax.add_patch(rect)
+        # Add the patch to the Axes
+        ax.add_patch(rect)
     plt.show()
 
 
 if __name__ == "__main__":
-    import dask.array as da
-    import matplotlib.pyplot as plt
-
     logging.basicConfig(level=logging.INFO)
     data = pd.read_csv("dataset/raw_data/DATOS_27_05_23.csv")
 
@@ -75,4 +75,5 @@ if __name__ == "__main__":
             window = pp.get_bbox_from_window(polygon, 64)
             stack = pp.generate_stack(prod.get_existing_bands(), window)
             bbox_relative = pp.get_xy_relative_to_window(window, polygon)
+            print(stack)
             visualize_stack(stack, bbox_relative)
