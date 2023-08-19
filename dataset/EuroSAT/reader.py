@@ -23,6 +23,7 @@ class EuroSAT(Dataset):
 
 
 if __name__ == "__main__":
-    es = EuroSAT("/home/esteve/projects/satellite-surface-algae-detection/dataset/EuroSAT/EuroSAT_MS")
+    import sys
+    es = EuroSAT(sys.argv[1])
     item = es[0]
     print(item)

@@ -3,7 +3,8 @@ import reader
 import numpy as np
 
 if __name__ == "__main__":
-    es = reader.EuroSAT("/home/esteve/projects/satellite-surface-algae-detection/dataset/EuroSAT/EuroSAT_MS")
+    import sys
+    es = reader.EuroSAT(sys.argv[1])
     for e in es:
         print(e[0])
         min_val = np.min(e[0].compute())
