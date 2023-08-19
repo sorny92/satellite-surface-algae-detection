@@ -8,15 +8,17 @@ from dask import dataframe
 
 class EuroSAT(Dataset):
     def __init__(self, dataset_path):
-        path = pathlib.Path(dataset_path)
-        image_paths = list(path.glob("*/*"))
-        self.img_labels = [(p.parent.name, p) for p in image_paths]
+        self.image_paths = []
+        with open(dataset_path, "r") as f:
+            for row in f:
+                self.image_paths.append(row.strip())
 
     def __len__(self):
-        return len(self.img_labels)
+        return len(self.image_paths)
 
     def __getitem__(self, idx):
-        label, path = self.img_labels[idx]
+        p = pathlib.Path(self.image_paths[idx])
+        label, path = p.parent.name, p
         im = utils.read(path)
         im = im.astype("uint16")
         return im, label
@@ -24,6 +26,7 @@ class EuroSAT(Dataset):
 
 if __name__ == "__main__":
     import sys
+
     es = EuroSAT(sys.argv[1])
     item = es[0]
     print(item)
