@@ -16,6 +16,7 @@ import torch
 import torchvision
 from barlowtwins import BarlowTwins
 from data_augmentation import Transform
+from dataset.EuroSAT.reader import EuroSAT
 
 parser = argparse.ArgumentParser(description='Barlow Twins Training')
 parser.add_argument('data', type=Path, metavar='DIR',
@@ -67,7 +68,7 @@ def main_worker(gpu, args):
     torch.cuda.set_device(gpu)
     torch.backends.cudnn.benchmark = True
 
-    model = BarlowTwins(args).cuda(gpu)
+    model = BarlowTwins(args.batch_size, args.lambd, args.projector).cuda(gpu)
     model = nn.SyncBatchNorm.convert_sync_batchnorm(model)
     param_weights = []
     param_biases = []
@@ -92,7 +93,8 @@ def main_worker(gpu, args):
     else:
         start_epoch = 0
 
-    dataset = torchvision.datasets.ImageFolder(args.data / 'train', Transform())
+    dataset = EuroSAT(args.data, Transform())
+    #dataset = torchvision.datasets.ImageFolder(args.data, Transform())
     sampler = torch.utils.data.distributed.DistributedSampler(dataset)
     assert args.batch_size % args.world_size == 0
     per_device_batch_size = args.batch_size // args.world_size

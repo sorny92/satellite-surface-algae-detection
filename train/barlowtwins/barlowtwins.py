@@ -4,7 +4,7 @@ from models.resnet import ResNet, Bottleneck
 
 
 def _resnet50():
-    return ResNet(Bottleneck, [3, 4, 6, 3], 12, zero_init_residual=True)
+    return ResNet(Bottleneck, [3, 4, 6, 3], 13, zero_init_residual=True)
 
 
 def off_diagonal(x):
