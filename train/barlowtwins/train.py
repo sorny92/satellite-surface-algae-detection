@@ -13,9 +13,8 @@ import time
 
 from torch import nn, optim
 import torch
-import torchvision
-from barlowtwins import BarlowTwins
-from data_augmentation import Transform
+from train.barlowtwins.barlowtwins import BarlowTwins
+from train.barlowtwins.data_augmentation import Transform
 from dataset.EuroSAT.reader import EuroSAT
 
 parser = argparse.ArgumentParser(description='Barlow Twins Training')

@@ -7,7 +7,6 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
-vissl = {path = "vissl"}
 
 sentinelsat = "^1.2.1"
 eoreader = "^0.19.4"

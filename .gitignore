@@ -6,3 +6,4 @@ docs/*
 __pycache__/
 dataset/EuroSAT/*.csv
 dataset/EuroSAT/EuroSAT_MS*
+*.lockexport NVIDIA_PATH=$HOME/.local/lib/python3.10/site-packages/nvidia
