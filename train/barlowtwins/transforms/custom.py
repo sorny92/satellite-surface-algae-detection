@@ -31,6 +31,7 @@ class Solarization(object):
         else:
             return img
 
+
 class BandsJitter(torch.nn.Module):
     """Randomly change the brightness, contrast, saturation and hue of an image.
     If the image is torch Tensor, it is expected
@@ -124,14 +125,16 @@ class BandsJitter(torch.nn.Module):
             PIL Image or Tensor: Color jittered image.
         """
         fn_idx, brightness_factor, contrast_factor = self.get_params(
-            self.brightness, self.contrast, self.saturation
+            self.brightness, self.contrast
         )
 
         for fn_id in fn_idx:
             if fn_id == 0 and brightness_factor is not None:
-                img = F.adjust_brightness(img, brightness_factor)
+                for idx in range(img.shape[0]):
+                    img[idx:idx+1, :, :] = F.adjust_brightness(img[idx:idx+1, :, :], brightness_factor)
             elif fn_id == 1 and contrast_factor is not None:
-                img = F.adjust_contrast(img, contrast_factor)
+                for idx in range(img.shape[0]):
+                    img[idx:idx+1, :, :] = F.adjust_contrast(img[idx:idx+1, :, :], contrast_factor)
 
         return img
 

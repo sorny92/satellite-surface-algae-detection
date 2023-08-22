@@ -1,6 +1,6 @@
 from PIL import Image
 import torchvision.transforms as transforms
-from transforms.custom import BandsJitter
+from train.barlowtwins.transforms.custom import BandsJitter
 
 
 class Transform:
@@ -8,7 +8,7 @@ class Transform:
         self.transform = transforms.Compose([
             transforms.RandomResizedCrop(64, interpolation=Image.BICUBIC, antialias=True),
             transforms.RandomHorizontalFlip(p=0.5),
-            transforms.RandomAffine(degrees=360, translate=0.3, shear=45),
+            transforms.RandomAffine(degrees=360, translate=(0.3, 0.3), shear=45),
             BandsJitter(brightness=0.4, contrast=0.4)
             #     [transforms.ColorJitter(brightness=0.4, contrast=0.4,
             #                             saturation=0.2, hue=0.1)],
