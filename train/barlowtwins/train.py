@@ -13,9 +13,9 @@ import time
 
 from torch import nn, optim
 import torch
-from train.barlowtwins.barlowtwins import BarlowTwins
-from train.barlowtwins.data_augmentation import Transform
+from . barlowtwins import BarlowTwins
 from dataset.EuroSAT.reader import EuroSAT
+from train.barlowtwins.data_augmentation import Transform
 
 parser = argparse.ArgumentParser(description='Barlow Twins Training')
 parser.add_argument('data', type=Path, metavar='DIR',
@@ -93,7 +93,7 @@ def main_worker(gpu, args):
         start_epoch = 0
 
     dataset = EuroSAT(args.data, Transform())
-    #dataset = torchvision.datasets.ImageFolder(args.data, Transform())
+    # dataset = torchvision.datasets.ImageFolder(args.data, Transform())
     sampler = torch.utils.data.distributed.DistributedSampler(dataset)
     assert args.batch_size % args.world_size == 0
     per_device_batch_size = args.batch_size // args.world_size
