@@ -111,7 +111,8 @@ class BandsJitter(torch.nn.Module):
         """
         fn_idx = torch.randperm(4)
 
-        b = None if brightness is None else float(torch.empty(1).uniform_(brightness[0], brightness[1]))
+        b = None if brightness is None else float(
+            torch.empty(1).uniform_(brightness[0], brightness[1]))
         c = None if contrast is None else float(torch.empty(1).uniform_(contrast[0], contrast[1]))
 
         return fn_idx, b, c
@@ -127,14 +128,15 @@ class BandsJitter(torch.nn.Module):
         fn_idx, brightness_factor, contrast_factor = self.get_params(
             self.brightness, self.contrast
         )
-
         for fn_id in fn_idx:
             if fn_id == 0 and brightness_factor is not None:
                 for idx in range(img.shape[0]):
-                    img[idx:idx+1, :, :] = F.adjust_brightness(img[idx:idx+1, :, :], brightness_factor)
+                    img[idx:idx + 1, :, :] = F.adjust_brightness(img[idx:idx + 1, :, :],
+                                                                 brightness_factor)
             elif fn_id == 1 and contrast_factor is not None:
                 for idx in range(img.shape[0]):
-                    img[idx:idx+1, :, :] = F.adjust_contrast(img[idx:idx+1, :, :], contrast_factor)
+                    img[idx:idx + 1, :, :] = F.adjust_contrast(img[idx:idx + 1, :, :],
+                                                               contrast_factor)
         return img
 
     def __repr__(self) -> str:

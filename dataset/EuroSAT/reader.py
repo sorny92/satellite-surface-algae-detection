@@ -20,7 +20,7 @@ class EuroSAT(Dataset):
         p = pathlib.Path(self.image_paths[idx])
         label, path = p.parent.name, p
         im = utils.read(self.dataset_root / path)
-        im = torch.from_numpy(im.astype("float32").to_numpy())
+        im = torch.from_numpy(im.astype("int16").to_numpy())
         if self.transforms:
             im = self.transforms(im)
         return im, label
