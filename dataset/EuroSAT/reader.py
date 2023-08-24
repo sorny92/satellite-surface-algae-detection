@@ -2,9 +2,6 @@ import torch
 from torch.utils.data import Dataset
 import pathlib
 from eoreader import utils
-import numpy as np
-from dask import dataframe
-import xarray
 
 
 class EuroSAT(Dataset):
@@ -26,8 +23,6 @@ class EuroSAT(Dataset):
         im = torch.from_numpy(im.astype("float32").to_numpy())
         if self.transforms:
             im = self.transforms(im)
-        else:
-            raise Exception
         return im, label
 
 

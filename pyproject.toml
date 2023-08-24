@@ -30,6 +30,9 @@ opencv-python = "^4.8.0"
 #AMAZON WE HATE YOU
 boto3 = "1.28.30"
 
+[tool.poetry.dev.dependencies]
+jupyter = "^1.0.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
