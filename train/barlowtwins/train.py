@@ -16,6 +16,7 @@ import torch
 from . barlowtwins import BarlowTwins
 from dataset.EuroSAT.reader import EuroSAT
 from train.barlowtwins.data_augmentation import Transform
+from torch.utils.tensorboard import SummaryWriter
 
 parser = argparse.ArgumentParser(description='Barlow Twins Training')
 parser.add_argument('data', type=Path, metavar='DIR',
@@ -101,8 +102,10 @@ def main_worker(gpu, args):
         dataset, batch_size=per_device_batch_size, num_workers=args.workers,
         pin_memory=True, sampler=sampler)
 
+    writer = SummaryWriter()
     start_time = time.time()
     scaler = torch.cuda.amp.GradScaler()
+    best_loss = 1e8
     for epoch in range(start_epoch, args.epochs):
         sampler.set_epoch(epoch)
         for step, ((y1, y2), _) in enumerate(loader, start=epoch * len(loader)):
@@ -117,6 +120,7 @@ def main_worker(gpu, args):
             scaler.update()
             if step % args.print_freq == 0:
                 if args.rank == 0:
+                    writer.add_scalar('Loss/train', loss.item(), step)
                     stats = dict(epoch=epoch, step=step,
                                  lr_weights=optimizer.param_groups[0]['lr'],
                                  lr_biases=optimizer.param_groups[1]['lr'],
@@ -129,6 +133,10 @@ def main_worker(gpu, args):
             state = dict(epoch=epoch + 1, model=model.state_dict(),
                          optimizer=optimizer.state_dict())
             torch.save(state, args.checkpoint_dir / 'checkpoint.pth')
+            writer.add_scalar('Loss/epoch', loss.item(), epoch)
+            if best_loss > loss.item():
+                torch.save(state, args.checkpoint_dir / 'checkpoint_best.pth')
+                best_loss = loss.item()
     if args.rank == 0:
         # save final model
         torch.save(model.module.backbone.state_dict(),
