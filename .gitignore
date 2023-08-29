@@ -6,7 +6,8 @@ docs/*
 __pycache__/
 dataset/EuroSAT/*.csv
 dataset/EuroSAT/EuroSAT_MS*
-dataset/algae/
+dataset/algae/algae
+dataset/algae/no_algae
 *.lockexport
 runs/
 checkpoint/
