@@ -106,5 +106,4 @@ class ProcessProduct:
                 )
                 bands_data[idx] = resampled_band
             bands_data = xarray.concat(bands_data, dim="z", coords="all", compat="override", join="override")
-            bands_data = bands_data.squeeze("bands")
         return bands_data

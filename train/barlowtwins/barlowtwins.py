@@ -3,7 +3,7 @@ import torch
 from models.resnet import ResNet, Bottleneck
 
 
-def _resnet50():
+def resnet50():
     return ResNet(Bottleneck, [3, 4, 6, 3], 13, zero_init_residual=True)
 
 
@@ -19,7 +19,7 @@ class BarlowTwins(nn.Module):
         super().__init__()
         self.batch_size = batch_size
         self.lambd = lambd
-        self.backbone = _resnet50()
+        self.backbone = resnet50()
         self.backbone.fc = nn.Identity()
 
         # projector

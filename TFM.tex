@@ -86,15 +86,17 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     positives in simple heuristics.
 
     Satellite imaging provides an enormous quantity of data.
-    To be specific about the sentinel-2 platform, it generates what is called tiles, of the same coordinates. This
-    images have a size of 10000x10000 pixels with a resolution of X on some bands and a resolution of Y in other bands.
+    To be specific about the sentinel-2 platform, it generates what is called tiles, of the same coordinates.
+    These images have a 1:1 aspect ratio with 10000 pixels in each dimension.
+    There are 13 spectral bands: 4 bands at 10 meters, 6 bands at 20 meters and 3 bands at 60 meters of
+    resolution per pixel.
     The amount of labelled data is at the scale of the whole earth, the problem is curating this
     data to something useful.
 
     This research is trying to improve the detection rate of this bodies of plants in lakes.
     Currently there are some lakes that are being tracked in a manual way where the researchers
     would apply several filters to detect them.
-    Obviously, this approach can't scale to more lakes without more operators and not even consider analysing this
+    This approach can't scale to more lakes without more operators and not even consider analysing this
     bodies at a global scale.
 
 
