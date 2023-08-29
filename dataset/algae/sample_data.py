@@ -1,3 +1,5 @@
+import pathlib
+
 from processing import ProcessProduct
 import pandas as pd
 from eoreader.reader import Reader
@@ -5,6 +7,7 @@ from shapely import wkt
 import geopandas as gpd
 from logging import debug, warning, info
 import logging
+import numpy as np
 
 
 def get_roi_from_polygon(polygon_string: str, product=None):
@@ -47,7 +50,7 @@ def visualize_stack(image_stack, bounding_box=None):
 
     import matplotlib.patches as patches
     ax.imshow(enhanced_img)
-    if bounding_box:
+    if bounding_box is not None:
         # Create a Rectangle patch
         rect = patches.Rectangle((bounding_box[0], bounding_box[2]),
                                  bounding_box[1] - bounding_box[0],
@@ -63,17 +66,31 @@ def visualize_stack(image_stack, bounding_box=None):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     data = pd.read_csv("dataset/raw_data/DATOS_27_05_23.csv")
-
+    save = True
+    visualize = False
+    idx = 0
     for filename in data["NOMBRE_FICHERO"].unique():
         prod = Reader().open(filename)
         pp = ProcessProduct(product=prod)
-        for idx, row in data[data["NOMBRE_FICHERO"] == filename].iterrows():
+        for _, row in data[data["NOMBRE_FICHERO"] == filename].iterrows():
             polygon_str = row["POLYGON"]
             date = row["Fecha"]
 
             polygon = get_roi_from_polygon(polygon_str, prod)
             window = pp.get_bbox_from_window(polygon, 64)
             stack = pp.generate_stack(prod.get_existing_bands(), window)
-            bbox_relative = pp.get_xy_relative_to_window(window, polygon)
-            print(stack)
-            visualize_stack(stack, bbox_relative)
+            if visualize:
+                bbox_relative = pp.get_xy_relative_to_window(window, polygon)
+                visualize_stack(stack, bbox_relative)
+
+            if save:
+                path = pathlib.Path("dataset")
+                has_algae = row["TIENE_ALGA"]
+                if has_algae:
+                    path = path / "algae"
+                else:
+                    path = path / "no_algae"
+                if not path.exists():
+                    path.mkdir()
+                np.save(path / f"{idx:0d}", stack.to_numpy())
+                idx +=1
