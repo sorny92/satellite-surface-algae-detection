@@ -2,7 +2,7 @@ import torch
 from train.barlowtwins import barlowtwins
 
 if __name__ == "__main__":
-    torch.cuda.set_device(1)
+    # torch.cuda.set_device(1)
     # torch.backends.cudnn.benchmark = True
 
     model = barlowtwins.BarlowTwins(1, 1, "1-1-1").backbone
@@ -20,12 +20,11 @@ if __name__ == "__main__":
     #model.fc.weight.data.normal_(mean=0.0, std=0.01)
     #model.fc.bias.data.zero_()
     model.eval()
-    model.half()
 
     import dataset.algae.reader as reader
 
     r = reader.Algae("/home/esteve/fast_folder/satellite-surface-algae-detection/dataset/algae")
     for v in r:
-        input = v[0].type(torch.Tensor).unsqueeze(0).half()
+        input = v[0].type(torch.Tensor).unsqueeze(0)
         prediction = model(input)
-        print(prediction[0][512])
+        print(prediction[0])
