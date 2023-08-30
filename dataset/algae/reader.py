@@ -20,7 +20,9 @@ class Algae(Dataset):
         p = pathlib.Path(self.image_paths[idx])
         label, path = p.parent.name, p
         im = np.load(self.dataset_root / path)
-        im = np.concatenate((im[:9, ...], np.zeros((1, im.shape[-1], im.shape[-1])), im[9:, ...]))
+        ## Add the missing channel from eoreader to get 13
+        if im.shape[0] == 12:
+            im = np.concatenate((im[:9, ...], np.zeros((1, im.shape[-1], im.shape[-1])), im[9:, ...]))
         im = torch.from_numpy(im)
         if self.transforms:
             im = self.transforms(im)

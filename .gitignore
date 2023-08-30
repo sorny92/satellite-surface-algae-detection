@@ -8,6 +8,7 @@ dataset/EuroSAT/*.csv
 dataset/EuroSAT/EuroSAT_MS*
 dataset/algae/algae
 dataset/algae/no_algae
+dataset/algae/incognito
 *.lockexport
 runs/
 checkpoint/
