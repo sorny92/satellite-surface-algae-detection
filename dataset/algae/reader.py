@@ -5,13 +5,15 @@ import numpy as np
 
 
 class Algae(Dataset):
-    def __init__(self, dataset_path, transforms=None):
+    def __init__(self, dataset_path, with_incognito=False, transforms=None):
         self.dataset_path = pathlib.Path(dataset_path)
         self.image_paths = []
         self.transforms = transforms
         self.dataset_root = pathlib.Path(dataset_path).parent
         self.image_paths.extend((self.dataset_path / "algae").glob("*"))
         self.image_paths.extend((self.dataset_path / "no_algae").glob("*"))
+        if with_incognito:
+            self.image_paths.extend((self.dataset_path / "incognito").glob("*"))
 
     def __len__(self):
         return len(self.image_paths)
