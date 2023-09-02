@@ -52,6 +52,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
         This work proposes an automatic search system of these form of life through computer vision systems to
         achieve an end-to-end detection.
+        Code is available at: \href{https://github.com/sorny92/satellite-surface-algae-detection}{github.com/sorny92/satellite-surface-algae-detection}.
     \end{abstract}
 
     \begin{IEEEkeywords}
@@ -145,11 +146,17 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Eurosat dataset\citep{helber2019eurosat} is a sentinel-2 dataset.
 
 
-    \section{Methods}
+    \section{Approach}
+
+    \subsection{Model pretraining}
+
+    \subsection{Classification model}
+
+    \subsection{Evaluation}
 
 
 
-    Doing self-supervised learning could be useful to fight the data scarcity.\citep{OKELLY1987393}
+    Doing self-supervised learning could be useful to fight the data scarcity.
     As the dataset will be small, a self-training step will be useful to generate
     a powerful embedding space to the train a classifer:
     https://github.com/satellite-image-deep-learning/techniques#self-supervised-unsupervised--contrastive-learning
@@ -171,10 +178,20 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     https://torchgeo.readthedocs.io/en/stable/api/models.html#torchgeo.models.resnet50 which is trained with MOCO and https://github.com/zhu-xlab/SSL4EO-S12 dataset.
 
 
-    \section{Experiments}
+    \section{Main results}
 
 
     \section{Future work}
+    Use more data as for example BigEarth dataset, or others listed to increase pretraining time thus variety of the dataset.
+
+    Use modern architectures based on transformers as they show to be better in some cases.
+
+    Others SSL training systems as DINOv2 show potential to stable trainings.
+
+    Distillation to improve the execution time.
+
+    Does the image retreival scale to other areas of the world? The system is trained with data of a limited area of the world.
+    If this was tested in an area with different weather conditions or different time of the year, would it perform in a similar way?
 
 
     \section{Conclusions}
