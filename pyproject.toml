@@ -26,12 +26,10 @@ geoviews = "^1.10"
 pyproj = "^3.6.0"
 cartopy = "0.22.0"
 opencv-python = "^4.8.0"
+jupyter = "*"
 
 #AMAZON WE HATE YOU
 boto3 = "1.28.30"
-
-[tool.poetry.dev.dependencies]
-jupyter = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
