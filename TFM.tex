@@ -8,6 +8,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
 \usepackage{graphicx}
+\graphicspath{ {./assets/} }
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{lipsum}
@@ -16,7 +17,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
 
 
-    \title{Satellite surface algae detection}
+    \title{Floating aquatic vegetation recognition using self-supervised methods with remote sensing data}
 
     \author{\IEEEauthorblockN{Esteve Soria Fabián}
     %\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
@@ -51,88 +52,144 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
         This work proposes an automatic search system of these form of life with a little amount of labelled training data.
         This is thanks to the use of self-learning techniques applied to remote sensing.
-        Code is available at: \href{https://github.com/sorny92/satellite-surface-algae-detection}{github.com/sorny92/satellite-surface-algae-detection}.
     \end{abstract}
+    \newline
+    Code: \href{https://github.com/sorny92/satellite-surface-algae-detection}{github.com/sorny92/satellite-surface-algae-detection}.
+    \newline
 
     \begin{IEEEkeywords}
-        remote-sensing, computer vision, deep-learning, image retrieval
+        remote-sensing, computer vision, deep-learning, image retrieval, Sentinel-2, self-supervision
     \end{IEEEkeywords}
 
 
     \section{Introduction}
-    During
-    The goal of the project is to be able to automatically detect the location of these plants
-    floating in the water.
-    These bodies have been located in a few locations of Spain as X, Y and Z. The figures X and Y
-    show how this bodies of plants look like from satellite.
-    There is some available research where the authors map similar bodies of floating aquatic vegetation ~\cite{rs14133013}
+    Thanks to the globally connected world we live in its possible to communicate with people from distant countries or
+    enjoy food from produce that is not native to our area.
+    Yet, this global economy also has some disadvantages.
+    Due to the global transport network and the big distances we can travel, humans have become an important vector of movement of species
+    between different ecosystems~\cite{invasive_species}.
+    Non-native species can become threads to biological ecosystems and disrupt all sort of environments,
+    from lakes or forests to whole countries~\cite{bhlitem21490}.
 
-    The source of the images is the pair of satellites Sentinel 2. This satellites haven been operationg since X year
-    providing remote sensing capabilities from the range X, Y of the earth.
-    This satellite can pass above the same point every X days allowing researchers and companies to
-    track specific locations to study how they change on time.
-    This satellite has 12 different bands or wavelengths where it can see. The bands are X, blah blah
-    each one of them are useful for different fields.
-    Examples of this are for example the tracking of crops as plant can be measured as X.
-    Another use is the tracking of water levels of different lakes or the effect of flooding and
-    natural catastrophes.
+    For many years researchers have been tracking and studying different invasive vegetation~\cite{huang2009applications, aguir2013, donyana1, donyana2} species.
+    In this project we seek to automatically detect the location of aquatic vegetation floating in the water.
+    The motivation is to provide a tool that could help the detection of this vegetation.
+    But also provide a tool to be able to detect any other type of species or even locate other kind of images thanks to the
+    high level information that provides the model generated in this work.
 
-    Remote sensing has it's own set of tools, approaches and problems.
+    In this work we use self-supervised techniques to train a model to generate embeddings from a patch of a tile.
+    Embeddings are a numerical representation of some information, in our case, an image.
+    Embeddings allow to compress the information contained in an image to a much manageable and representative list of values.
+
+    We use BarlowTwins~\cite{barlowtwins} framework to train an embeddings generating architecture for remote-sensing.
+    We chose to use BarlowTwins for its simple architecture which does not require a momentum encoder (like MoCo~\cite{he2020momentum, grill2020bootstrap}).
+    Also, it does not need negative sampling as SimCLR~\cite{chen2020simple} which becomes helpful with satellite imaging as it allows to use
+    all the world indiscriminately without having to create contrastive triplets.
+    The simple architecture allows for a training that can happen in low budget systems and a minimal labelled amount of data.
+
+    For the use of the system, fine-tuning a classification head becomes trivial with only hundreds of images with positive and negative
+    samples of the target classes.
+    Although, because the model can generate embeddings from any sentinel-2 image it cn also be used as a tool for image retrieval
+    where the researcher can provide example images of what is looking for and the system will return the closest images that
+    have been indexed.
+
+    For this project, images have been sourced from the pair of satellites Sentinel-2~\cite{sentinel-2}.
+    These satellites haven been operating since 2015 providing remote sensing capabilities in the range of latitudes between 56ºS and 84ºN\@.
+    This satellite can pass above the same point every 5 days allowing researchers and companies to track specific locations
+    to study how they change on time.
+    This satellite has 13 different bands or wavelengths with a resolution up to 10m per pixel.
+    Bands range from infrared through the visible spectrum to short wave infrared.
+    The indexation of several bands together end up being really useful for some task as, for example, monitoring vegetation~\cite{TUCKER1979127}.
+    Another use is the tracking of water levels of different lakes or the effect of flooding and natural catastrophes.
+
+    Remote sensing has its own set of tools, approaches and problems.
     Some research is approached as a traditional computer vision problem were the researcher will
-    generated their own heuristics to be able to track the metric they are interested into.
-    An example of this is the NVDI metric which is a simple calculation around some of the bands of
-    sentinel which results in a relly useful tool to identify clorophil based life and how they
-    propagate.
-    One of the problems of the previous approach is it own simplicity, it's really good at measuring
-    plants but can provide not really useful values for other cases that are not related.
-    Machine learning techniques can be useful for remote sensing to avoid the problem of false
-    positives in simple heuristics.
+    generate their own heuristics to be able to track the metric they are interested into.
+    An example of this is the NDVI~\cite{NDVIsource} metric which uses the bands from near infrared and red to
+    measure the leaf water content and chlorophyll content~\cite{TUCKER1979127}.
 
-    Satellite imaging provides an enormous quantity of data.
-    To be specific about the sentinel-2 platform, it generates what is called tiles, of the same coordinates.
-    These images have a 1:1 aspect ratio with 10000 pixels in each dimension.
-    There are 13 spectral bands: 4 bands at 10 meters, 6 bands at 20 meters and 3 bands at 60 meters of
-    resolution per pixel.
-    The amount of labelled data is at the scale of the whole earth, the problem is curating this
-    data to something useful.
+    One of the problems of the heuristic approach is it own simplicity, it is excellent at measuring
+    vegetation, but it also comes with its own problems.
+    NDVI for example, is quite sensitive to the amount of atmosphere there is between the capture system and the target and
+    the behaviour compared between different capture system is not constant~\cite{Huang2021}.
 
-    This research is trying to improve the detection rate of this bodies of plants in lakes.
-    Currently there are some lakes that are being tracked in a manual way where the researchers
-    would apply several filters to detect them.
-    This approach can't scale to more lakes without more operators and not even consider analysing this
-    bodies at a global scale.
+    Machine learning techniques can be useful to deal with the problems of heuristic based methods as they can fit the best model
+    based on the data provided of the problem.
+
+    Thanks to the increasing amount of satellites and aerial programs, there are many different providers with remote sensing capabilities.
+    Later on in section~\ref{sec:dataset} to dive deeper in some of the data available today but nevertheless here some details of the Sentinel-2 platform
+    which is used in this project:
+    \begin{itemize}
+        \item 4 bands at 10 meters resolution per pixel.
+        \item 6 bands at 20 meters resolution per pixel.
+        \item 3 bands at 60 meters resolution per pixel.
+        \item Range of latitudes between 56ºS and 84ºN.
+        \item Visit the same location with the same angle every 10 days or 5 days using two satellites.
+        \item Tiles of 290km in size.
+        \item 10980x10980 pixels of resolution.
+    \end{itemize}
+    The amount of data available is quite big, the problem is gathering insights of it as there's not as much labelled data
+    available.
+    For this project a small dataset had to be gathered, so we could benchmark how effective this framework is to detect the
+    floating vegetation.
+
+    In this project we study an improved pipeline for ease of detection of this vegetation in lakes but also provide a tool
+    to find other regions of interest and similar to them.
+    Currently, there are some lakes that are being tracked in a manual way where the researchers  would apply several filters to detect them.
+    This research makes use of data from the Cedillo dam in Spain spanning from the town of Cedillo to Alcántara.
+    In figure~\ref{fig:satellite-image-airbus} an example of the vegetation mat can be seen.
+    Other researchers have work in similar projects in Doñana National park (Spain)~\cite{donyana1, donyana2} or California state (USA)~\cite{rs14133013}.
+    These approaches can't scale to more lakes without more people looking for them as the tools currently used are targeted
+    for specific use cases and heuristics need to be developed for each individual case.
+    So doing a search at a global scale can not even be considered.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=6cm]{figure_algae_airbus}
+        \caption{Aerial image of an aquatic vegetation floating mat in the Cedillo lake (Spanish-Portuguese border). It can easily be identified as it's distinctive
+        intense green colour in comparison of the water. Images from Airbus, CNES/Airbus, IGP/ DGRF 2023}
+        \label{fig:satellite-image-airbus}
+    \end{figure}
 
 
     \section{Related work}
 
+    \subsection*{Remote sensing for vegetation detection}
+
 
     \subsection*{Image segmentation}
-    This problem can be solved in different ways. The general idea is give the researchers more data
-    of this bodies so they can analyse where, why and when they will appear but also how do they
+    This problem can be solved in different ways.
+    The general idea is give the researchers more data of these bodies, so they can analyse where, why and when they will appear but also how do they
     behave on time.
 
-    Image segmentation arises as an obvious approach to the problem. We have images of the whole earth
-    if we can have enough images with ground truths we could train a system to segment this bodies in
+    Image segmentation arises as an obvious approach to the problem.
+    We have images of the whole earth if we can have enough images with ground truths we could train a system to segment this bodies in
     each tile so as the satellite is moving around the earth an automated system could run when these
     tiles are being generated in real-time.
 
     The problem of this approach is th generation of enough labelled data to become useful.
     Image segmentation has been traditionally expensive to label due to the nature of the label, as
     you need a value per pixel.
-    This can be reduced with new approaches as SAM. SAM allows segmenting anything based on a prior
-    value. This prior value can be a point or a bounding box. This tool results really useful as
-    the dataset we posses consists of few images with tenths of boundingboxes or the ROI.
-    SAM could be used to find the edges of this bounding box so then the problem can be approached
-    as a segmentation.
+    This can be reduced with new approaches as Segment Anything~\cite{kirillov2023segment} which allows segmenting any type of image based on priors.
+    These priors could be points or bounding boxes provided as input.
+    This tool is becoming really useful for research and development as it can accelerate the labelling time for image segmentation tasks.
+    In our case, as the dataset contains of few images with tenths of bounding boxes, SAM could be used to find the perimeter
+    of the vegetation mats and be used as inputs to train a segmentation model.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=6cm]{segmented_tile}
+        \caption{On the left a crop of a tile from sentinel-2. On the right a segmented image of the crop showing the
+        location of the vegetation mat.}
+        \label{fig:tile-segmented}
+    \end{figure}
 
     \subsection{Image retreival}
-
-    \subsection{Image segmentation}
 
     \subsection{Image classificacion}
 
 
-    \section{Dataset}
+    \section{Dataset}\label{sec:dataset}
     Other datasets
     https://torchgeo.readthedocs.io/en/stable/api/datasets.html#non-geospatial-datasets
 
@@ -187,7 +244,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     Use modern architectures based on transformers as they show to be better in some cases.
 
-    Others SSL training systems as DINOv2 show potential to stable trainings.
+    Others SSL training systems as DINOv2~\cite{DINO} show potential to stable trainings.
 
     Distillation to improve the execution time.
 
