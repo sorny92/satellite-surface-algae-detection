@@ -2,8 +2,8 @@
 \IEEEoverridecommandlockouts
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it
 % out.
-\usepackage[authoryear, numbers]{natbib}
-\bibliographystyle{plain}
+\usepackage[numbers]{natbib}
+\bibliographystyle{plainnat}
 \usepackage{hyperref}
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{algorithmic}
@@ -135,7 +135,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     In this project we study an improved pipeline for ease of detection of this vegetation in lakes but also provide a tool
     to find other regions of interest and similar to them.
-    Currently, there are some lakes that are being tracked in a manual way where the researchers  would apply several filters to detect them.
+    Currently, there are some lakes that are being tracked in a manual way where the researchers would apply several filters to detect them.
     This research makes use of data from the Cedillo dam in Spain spanning from the town of Cedillo to Alcántara.
     In figure~\ref{fig:satellite-image-airbus} an example of the vegetation mat can be seen.
     Other researchers have work in similar projects in Doñana National park (Spain)~\cite{donyana1, donyana2} or California state (USA)~\cite{rs14133013}.
@@ -153,6 +153,21 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
     \section{Related work}
+    A big concern is the damage floating vegetation create for the biodiversity of aquatic areas and how this mats can cover the sunlight for species that live underwater.
+    There are authors that have work in the detection and tracking of these mats~\cite{donyana1, donyana2,rs14133013, srilanka_veg, 10.3389/fmars.2022.1004012} in different areas of the world.
+
+    There are several approaches that can be followed
+
+    Authors like~\citet{srilanka_veg, 10.3389/fmars.2022.1004012} use pixel level classification models with manually annotated data from satellite image but also UAVs.
+    Depending on the authors, there's different classes they use as target for the classification system.
+    For example \citet{rs14133013} uses 8 classes: 4 different surface level species, one for submerged vegetation, one for non-photosynthetic vegetation, soil and water.
+    To label the data the authors generate polygons of areas in the water based on GPS data from in-situ measurements and use GIS technologies to match them with the images from the satellite.
+
+    \citet{10.3389/fmars.2022.1004012} also follow a similar approach taking measurements of the reflectance of the different classes in situ to then match this values to the aerial images.
+    Then they use a SVM based classification technique to train a model due to the good performance they offer with low amounts of data~\cite{Cortes1995}.
+
+
+
 
     \subsection*{Remote sensing for vegetation detection}
 
