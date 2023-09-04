@@ -21,6 +21,43 @@
     primaryClass = {cs.CV}
 }
 
+@article{JMLR:v9:vandermaaten08a,
+  author  = {Laurens van der Maaten and Geoffrey Hinton},
+  title   = {Visualizing Data using t-SNE},
+  journal = {Journal of Machine Learning Research},
+  year    = {2008},
+  volume  = {9},
+  number  = {86},
+  pages   = {2579--2605},
+  url     = {http://jmlr.org/papers/v9/vandermaaten08a.html}
+}
+
+@misc{goodfellow2014generative,
+    title = {Generative Adversarial Networks},
+    author = {Ian J. Goodfellow and Jean Pouget-Abadie and Mehdi Mirza and Bing Xu and David Warde-Farley and Sherjil Ozair and Aaron Courville and Yoshua Bengio},
+    year = {2014},
+    eprint = {1406.2661},
+    archivePrefix = {arXiv},
+    primaryClass = {stat.ML}
+}
+
+@misc{he2015deep,
+      title={Deep Residual Learning for Image Recognition},
+      author={Kaiming He and Xiangyu Zhang and Shaoqing Ren and Jian Sun},
+      year={2015},
+      eprint={1512.03385},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV}
+}
+
+@misc{radford2016unsupervised,
+    title = {Unsupervised Representation Learning with Deep Convolutional Generative Adversarial Networks},
+    author = {Alec Radford and Luke Metz and Soumith Chintala},
+    year = {2016},
+    eprint = {1511.06434},
+    archivePrefix = {arXiv},
+    primaryClass = {cs.LG}
+}
 % Dataset to do pre-training o self-supervised for embeddings as it's
 % sentinel-2 and has water bodies on it
 
@@ -31,6 +68,16 @@
     year = {2019},
     publisher = {IEEE}
 }
+
+@INPROCEEDINGS{bigearthnet,
+    author = {Sumbul, Gencer and Charfuelan, Marcela and Demir, Begüm and Markl, Volker},
+    booktitle = {IGARSS 2019 - 2019 IEEE International Geoscience and Remote Sensing Symposium},
+    title = {Bigearthnet: A Large-Scale Benchmark Archive for Remote Sensing Image Understanding},
+    year = {2019},
+    volume = {},
+    number = {},
+    pages = {5901-5904},
+    doi = {10.1109/IGARSS.2019.8900532} }
 
 
 % Maybe interesting papers of self-supervised and pixel level data taken from
@@ -367,38 +414,136 @@
 }
 
 
-color indices for remote sensing:
-https://github.com/awesome-spectral-indices/awesome-spectral-indices
+@Article{rs12244021,
+    AUTHOR = {Singh, Geethen and Reynolds, Chevonne and Byrne, Marcus and Rosman, Benjamin},
+    TITLE = {A Remote Sensing Method to Monitor Water, Aquatic Vegetation, and Invasive Water Hyacinth at National Extents},
+    JOURNAL = {Remote Sensing},
+    VOLUME = {12},
+    YEAR = {2020},
+    NUMBER = {24},
+    ARTICLE-NUMBER = {4021},
+    URL = {https://www.mdpi.com/2072-4292/12/24/4021},
+    ISSN = {2072-4292},
+    ABSTRACT = {Diverse freshwater biological communities are threatened by invasive aquatic alien plant (IAAP) invasions and consequently, cost countries millions to manage. The effective management of these IAAP invasions necessitates their frequent and reliable monitoring across a broad extent and over a long-term. Here, we introduce and apply a monitoring approach that meet these criteria and is based on a three-stage hierarchical classification to firstly detect water, then aquatic vegetation and finally water hyacinth (Pontederia crassipes, previously Eichhornia crassipes), the most damaging IAAP species within many regions of the world. Our approach circumvents many challenges that restricted previous satellite-based water hyacinth monitoring attempts to smaller study areas. The method is executable on Google Earth Engine (GEE) extemporaneously and utilizes free, medium resolution (10&ndash;30 m) multispectral Earth Observation (EO) data from either Landsat-8 or Sentinel-2. The automated workflow employs a novel simple thresholding approach to obtain reliable boundaries for open-water, which are then used to limit the area for aquatic vegetation detection. Subsequently, a random forest modelling approach is used to discriminate water hyacinth from other detected aquatic vegetation using the eight most important variables. This study represents the first national scale EO-derived water hyacinth distribution map. Based on our model, it is estimated that this pervasive IAAP covered 417.74 km2 across South Africa in 2013. Additionally, we show encouraging results for utilizing the automatically derived aquatic vegetation masks to fit and evaluate a convolutional neural network-based semantic segmentation model, removing the need for detection of surface water extents that may not always be available at the required spatio-temporal resolution or accuracy. The water hyacinth species discrimination has a 0.80, or greater, overall accuracy (0.93), F1-score (0.87) and Matthews correlation coefficient (0.80) based on 98 widely distributed field sites across South Africa. The results suggest that the introduced workflow is suitable for monitoring changes in the extent of open water, aquatic vegetation, and water hyacinth for individual waterbodies or across national extents. The GEE code can be accessed here.},
+    DOI = {10.3390/rs12244021}
+}
 
-Interesting libraries for loading images from Sentinel-2:
+@inproceedings{NIPS2012_c399862d,
+    author = {Krizhevsky, Alex and Sutskever, Ilya and Hinton, Geoffrey E},
+    booktitle = {Advances in Neural Information Processing Systems},
+    editor = {F. Pereira and C.J. Burges and L. Bottou and K.Q. Weinberger},
+    pages = {},
+    publisher = {Curran Associates, Inc.},
+    title = {ImageNet Classification with Deep Convolutional Neural Networks},
+    url = {https://proceedings.neurips.cc/paper_files/paper/2012/file/c399862d3b9d6b76c8436e924a68c45b-Paper.pdf},
+    volume = {25},
+    year = {2012}
+}
 
-Maybe:
-https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/what-is-arcpy-.htm
+@article{de2021continual,
+    title = {A continual learning survey: Defying forgetting in classification tasks},
+    author = {De Lange, Matthias and Aljundi, Rahaf and Masana, Marc and Parisot, Sarah and Jia, Xu and Leonardis, Ale{\v{s}} and Slabaugh, Gregory and Tuytelaars, Tinne},
+    journal = {IEEE transactions on pattern analysis and machine intelligence},
+    volume = {44},
+    number = {7},
+    pages = {3366--3385},
+    year = {2021},
+    publisher = {IEEE}
+}
 
-This looks really nice as it also allows to overlay on maps natively:
-https://geopandas.org/en/stable/getting\_started/introduction.html
+@inproceedings{purushwalkam2022challenges,
+    title = {The challenges of continuous self-supervised learning},
+    author = {Purushwalkam, Senthil and Morgado, Pedro and Gupta, Abhinav},
+    booktitle = {European Conference on Computer Vision},
+    pages = {702--721},
+    year = {2022},
+    organization = {Springer}
+}
 
-This project is lit!
-https://github.com/satellite-image-deep-learning/techniques
-https://github.com/acgeospatial/awesome-earthobservation-code
+@article{kirkpatrick2017overcoming,
+    title = {Overcoming catastrophic forgetting in neural networks},
+    author = {Kirkpatrick, James and Pascanu, Razvan and Rabinowitz, Neil and Veness, Joel and Desjardins, Guillaume and Rusu, Andrei A and Milan, Kieran and Quan, John and Ramalho, Tiago and Grabska-Barwinska, Agnieszka and others},
+    journal = {Proceedings of the national academy of sciences},
+    volume = {114},
+    number = {13},
+    pages = {3521--3526},
+    year = {2017},
+    publisher = {National Acad Sciences}
+}
 
-Lots of datasets!
-https://github.com/Seyed-Ali-Ahmadi/Awesome\_Satellite\_Benchmark\_Datasets
+@ARTICLE{10135093,
+    author = {Marsocci, Valerio and Scardapane, Simone},
+    journal = {IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},
+    title = {Continual Barlow Twins: Continual Self-Supervised Learning for Remote Sensing Semantic Segmentation},
+    year = {2023},
+    volume = {16},
+    number = {},
+    pages = {5049-5060},
+    doi = {10.1109/JSTARS.2023.3280029} }
 
 
-Interesting survery here:
-https://github.com/VIROBO-15/Transformer-in-Remote-Sensing
+@ARTICLE{9127795,
+    author = {Cheng, Gong and Xie, Xingxing and Han, Junwei and Guo, Lei and Xia, Gui-Song},
+    journal = {IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},
+    title = {Remote Sensing Image Scene Classification Meets Deep Learning: Challenges, Methods, Benchmarks, and Opportunities},
+    year = {2020},
+    volume = {13},
+    number = {},
+    pages = {3735-3756},
+    doi = {10.1109/JSTARS.2020.3005403} }
 
-To visualize custom maps:
-https://python-visualization.github.io/folium/quickstart.html
-https://github.com/giswqs/geemap
+@article{Mendieta2023GFMBG,
+    title = {GFM: Building Geospatial Foundation Models via Continual Pretraining},
+    author = {Mat'ias Mendieta and Boran Han and Xingjian Shi and Yi Zhu and Chen Chen and Mu Li},
+    journal = {ArXiv},
+    year = {2023},
+    volume = {abs/2302.04476},
+    url = {https://api.semanticscholar.org/CorpusID:256697124}
+}
 
+@Article{SEN12MS_dataset,
+    AUTHOR = {Schmitt, M. and Hughes, L. H. and Qiu, C. and Zhu, X. X.},
+    TITLE = {SEN12MS – A CURATED DATASET OF GEOREFERENCED MULTI-SPECTRAL SENTINEL-1/2 IMAGERY FOR DEEP LEARNING AND DATA FUSION},
+    JOURNAL = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+    VOLUME = {IV-2/W7},
+    YEAR = {2019},
+    PAGES = {153--160},
+    URL = {https://isprs-annals.copernicus.org/articles/IV-2-W7/153/2019/},
+    DOI = {10.5194/isprs-annals-IV-2-W7-153-2019}
+}
 
-Too many resources for satellite imaging:
-https://github.com/sacridini/Awesome-Geospatial
+@Article{postdam_dataset,
+    AUTHOR = {Rottensteiner, F. and Sohn, G. and Jung, J. and Gerke, M. and Baillard, C. and Benitez, S. and Breitkopf, U.},
+    TITLE = {THE ISPRS BENCHMARK ON URBAN OBJECT CLASSIFICATION AND 3D BUILDING RECONSTRUCTION},
+    JOURNAL = {ISPRS Annals of the Photogrammetry, Remote Sensing and Spatial Information Sciences},
+    VOLUME = {I-3},
+    YEAR = {2012},
+    PAGES = {293--298},
+    URL = {https://isprs-annals.copernicus.org/articles/I-3/293/2012/},
+    DOI = {10.5194/isprsannals-I-3-293-2012}
+}
 
-Is this really useful?
-https://github.com/microsoft/torchgeo
+@ARTICLE{millionaid,
+    author = {Long, Yang and Xia, Gui-Song and Li, Shengyang and Yang, Wen and Yang, Michael Ying and Zhu, Xiao Xiang and Zhang, Liangpei and Li, Deren},
+    journal = {IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},
+    title = {On Creating Benchmark Dataset for Aerial Image Interpretation: Reviews, Guidances, and Million-AID},
+    year = {2021},
+    volume = {14},
+    number = {},
+    pages = {4205-4230},
+    doi = {10.1109/JSTARS.2021.3070368} }
 
-Hmmm video results....
-https://github.com/acgeospatial/awesome-earthobservation-code#visualisation
+@article{patternet,
+    title = {PatternNet: A benchmark dataset for performance evaluation of remote sensing image retrieval},
+    journal = {ISPRS Journal of Photogrammetry and Remote Sensing},
+    volume = {145},
+    pages = {197-209},
+    year = {2018},
+    note = {Deep Learning RS Data},
+    issn = {0924-2716},
+    doi = {https://doi.org/10.1016/j.isprsjprs.2018.01.004},
+    url = {https://www.sciencedirect.com/science/article/pii/S0924271618300042},
+    author = {Weixun Zhou and Shawn Newsam and Congmin Li and Zhenfeng Shao},
+    keywords = {Remote sensing, Content based image retrieval (CBIR), Benchmark dataset, Handcrafted features, Deep learning, Convolutional neural networks},
+    abstract = {Benchmark datasets are critical for developing, evaluating, and comparing remote sensing image retrieval (RSIR) approaches. However, current benchmark datasets are deficient in that (1) they were originally collected for land use/land cover classification instead of RSIR; (2) they are relatively small in terms of the number of classes as well as the number of images per class which makes them unsuitable for developing deep learning based approaches; and (3) they are not appropriate for RSIR due to the large amount of background present in the images. These limitations restrict the development of novel approaches for RSIR, particularly those based on deep learning which require large amounts of training data. We therefore present a new large-scale remote sensing dataset termed “PatternNet” that was collected specifically for RSIR. PatternNet was collected from high-resolution imagery and contains 38 classes with 800 images per class. Significantly, PatternNet’s large scale makes it suitable for developing novel, deep learning based approaches for RSIR. We use PatternNet to evaluate the performance of over 35 RSIR methods ranging from traditional handcrafted feature based methods to recent, deep learning based ones. These results serve as a baseline for future research on RSIR.}
+}

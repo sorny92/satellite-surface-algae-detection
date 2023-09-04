@@ -13,7 +13,7 @@ https://arxiv.org/pdf/2201.13182.pdf
 
 https://arxiv.org/pdf/2101.11282.pdf
 
-Instance retreival
+Instance retrieval
 https://arxiv.org/pdf/2101.11282.pdf
 
 Instance segmentation sentinel2
@@ -28,3 +28,39 @@ https://arxiv.org/pdf/2210.02745.pdf
 
 Sentinel2 benchmark
 https://arxiv.org/pdf/2210.02745.pdf
+
+color indices for remote sensing:
+https://github.com/awesome-spectral-indices/awesome-spectral-indices
+
+Interesting libraries for loading images from Sentinel-2:
+
+Maybe:
+https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/what-is-arcpy-.htm
+
+This looks really nice as it also allows to overlay on maps natively:
+https://geopandas.org/en/stable/getting\_started/introduction.html
+
+This project is lit!
+https://github.com/satellite-image-deep-learning/techniques
+https://github.com/acgeospatial/awesome-earthobservation-code
+
+Lots of datasets!
+https://github.com/Seyed-Ali-Ahmadi/Awesome\_Satellite\_Benchmark\_Datasets
+
+
+Interesting survery here:
+https://github.com/VIROBO-15/Transformer-in-Remote-Sensing
+
+To visualize custom maps:
+https://python-visualization.github.io/folium/quickstart.html
+https://github.com/giswqs/geemap
+
+
+Too many resources for satellite imaging:
+https://github.com/sacridini/Awesome-Geospatial
+
+Is this really useful?
+https://github.com/microsoft/torchgeo
+
+Hmmm video results....
+https://github.com/acgeospatial/awesome-earthobservation-code#visualisation

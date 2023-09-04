@@ -12,6 +12,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{lipsum}
+\usepackage{color}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
 T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 \begin{document}
@@ -145,7 +146,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=6cm]{figure_algae_airbus}
+        \includegraphics[width=9cm]{figure_algae_airbus}
         \caption{Aerial image of an aquatic vegetation floating mat in the Cedillo lake (Spanish-Portuguese border). It can easily be identified as it's distinctive
         intense green colour in comparison of the water. Images from Airbus, CNES/Airbus, IGP/ DGRF 2023}
         \label{fig:satellite-image-airbus}
@@ -156,7 +157,8 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     A big concern is the damage floating vegetation create for the biodiversity of aquatic areas and how this mats can cover the sunlight for species that live underwater.
     There are authors that have work in the detection and tracking of these mats~\cite{donyana1, donyana2,rs14133013, srilanka_veg, 10.3389/fmars.2022.1004012} in different areas of the world.
 
-    There are several approaches that can be followed
+    There are several approaches that can be followed:
+    \subsection*{Heuristic based methods}
 
     Authors like~\citet{srilanka_veg, 10.3389/fmars.2022.1004012} use pixel level classification models with manually annotated data from satellite image but also UAVs.
     Depending on the authors, there's different classes they use as target for the classification system.
@@ -166,105 +168,235 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \citet{10.3389/fmars.2022.1004012} also follow a similar approach taking measurements of the reflectance of the different classes in situ to then match this values to the aerial images.
     Then they use a SVM based classification technique to train a model due to the good performance they offer with low amounts of data~\cite{Cortes1995}.
 
+    Other works as \citet{rs12244021} achieve a good performance for a country scale detection system.
+    In their research they make use of a multistage system where: First, water is detected using the index MNDWI, then a second stage to detect vegetation in the water using NDVI index then a classifier to
+    identify different species of vegetation in the water.
+    This is a complete end-to-end approach that accomplish what we are looking for in this project but there are number of parameters and heuristics that need to be adjusted to make the system to work.
+    As another disadvantage is that it focuses in one single specie, so the parameters and thresholds of the multistage system will have to be adapted to each new problem or situation.
+    In our work we focus in the ability of the system to adapt to any image and be able to retrieve similar ones only based on a small subset of images of a region of interest.
 
 
+    \subsection*{Data driven methods}
+    Since the appearance of AlexNet~\cite{NIPS2012_c399862d}, deep neural networks have become state of the art systems for visual recognition.
+    The problem of deep learning is the amount of data that is required to train them effectively.
+    This is a big problem for the detection of this plants as many of the research conducted in the past required having researchers in-situ to capture the data that then
+    would be used to create a system for tracking and detection.
 
-    \subsection*{Remote sensing for vegetation detection}
+    There are also, several challenges of remote sensing image scene classification\cite{9127795}:
+    \begin{itemize}
+        \item Big intraclass diversity;
+        \item High interclass similarity (also known as low between-class separability);
+        \item Large variance of object/scene scales;
+        \item Coexistence of multiple ground objects
+    \end{itemize}
 
+    \subsubsection*{Supervised}
 
-    \subsection*{Image segmentation}
+    \textcolor{red}{More data driven stuff\cite{9127795, Mendieta2023GFMBG, jean2019tile2vec, akiva2020h2onet}}
+    \textcolor{red}{More segmentation stuff \cite{Li_2022, inproceedings, 9460820, kirillov2023segment, akiva2020h2onet, 10135093}}
+    Image segmentation has been traditionally expensive to label due to the nature of the label.
     This problem can be solved in different ways.
-    The general idea is give the researchers more data of these bodies, so they can analyse where, why and when they will appear but also how do they
-    behave on time.
 
-    Image segmentation arises as an obvious approach to the problem.
-    We have images of the whole earth if we can have enough images with ground truths we could train a system to segment this bodies in
-    each tile so as the satellite is moving around the earth an automated system could run when these
-    tiles are being generated in real-time.
+    \subsubsection*{Self-supervised}
 
-    The problem of this approach is th generation of enough labelled data to become useful.
-    Image segmentation has been traditionally expensive to label due to the nature of the label, as
-    you need a value per pixel.
-    This can be reduced with new approaches as Segment Anything~\cite{kirillov2023segment} which allows segmenting any type of image based on priors.
-    These priors could be points or bounding boxes provided as input.
-    This tool is becoming really useful for research and development as it can accelerate the labelling time for image segmentation tasks.
+    There are several approaches for self-learning.
+    Generative, predictive and contrastive.
+    In the past years the generative approach used to be the most common one with the use of GANs~\cite{goodfellow2014generative, radford2016unsupervised}.
+    Nowadays, the interest has shifted for contrastive methods as they are showing strong results in comparison with supervised methods.
+    \textcolor{red}{Get a bit deeper in self supervised: \cite{wang2022selfsupervised, DINO, barlowtwins, Li_2022, grill2020bootstrap, Jung2021SelfsupervisedLW, li2022efficient, caron2021unsupervised, inproceedings, 9460820}}
+
+    \subsubsection{Decrease of data labelling time}
+
+    The gathering of data required to be on-site can be reduced with the use of labelling tools to assist the researchers.
+    For example, some researchers used in-situ measurements to then draw polygons that delimited the pixels that covered the area of interest.
+    Nowadays with the use of tools as Segment Anything~\cite{kirillov2023segment} which allows segmenting any type of image based on priors, the labelling time would be much shorter.
+    These priors could be points or bounding boxes provided as input instead of whole polygons that take much longer to draw.
     In our case, as the dataset contains of few images with tenths of bounding boxes, SAM could be used to find the perimeter
     of the vegetation mats and be used as inputs to train a segmentation model.
+    We have images of the whole earth if we can have enough images with ground truths as in figure~\ref{fig:tile-segmented} we could train a system to segment this bodies in
+    each tile so as the satellite is moving around the earth an automated system could run when these tiles are being generated in real-time.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=6cm]{segmented_tile}
-        \caption{On the left a crop of a tile from sentinel-2. On the right a segmented image of the crop showing the
-        location of the vegetation mat.}
+        \includegraphics[width=9cm]{segmented_tile}
+        \caption{\textcolor{red}{IMAGE NEEDS TO BE CHANGED TO ONE OF OUR PROJECT:
+        On the left a crop of a tile from sentinel-2. On the right a segmented image of the crop showing the
+        location of the vegetation mat.}}
         \label{fig:tile-segmented}
     \end{figure}
 
-    \subsection{Image retreival}
 
-    \subsection{Image classificacion}
+    \section{Datasets}\label{sec:dataset}
+    For remote sensing tasks there are several sources of data.
+    These are mostly aerial or from satellites.
+    Depending on the resolution and spectral requirements different datasets can be used.
+    For example for semantic segmentation SEN12MS~\cite{SEN12MS_dataset} is available with multi-spectral images
+    in SAR and the 13 bands of sentinel and labels for land cover and land use.
+    Other semantic segmentation datasets as Postdam~\cite{postdam_dataset} provide high resolutionimages, 5cm per pixel of
+    city areas.
 
+    The biggest datasets available for classification task are BigEarthNet~\cite{bigearthnet}, EuroSAT~\cite{helber2019eurosat},
+    PatternNet~\cite{patternet} or Million-AID~\cite{millionaid}.
 
-    \section{Dataset}\label{sec:dataset}
-    Other datasets
-    https://torchgeo.readthedocs.io/en/stable/api/datasets.html#non-geospatial-datasets
+    Some of them as BigEarthNet or EuroSAT include multispectral data as they come from Sentinel-2, but others like PatterNet or Million-AID are restricted to RGB data.
+    Due to the higher information that multispectral datasets provide for some research it is worth the use of MSI rather than RGB\@.
 
-    To work on this problem a small dataset has been gathered with 140 labelled points.
-    This dataset has been captured manually by the researchers at Universidad de Valencia.
-    The labelled data consists in table with a ROI defined by it's coordinates and the date
+    In our work we choose to use EuroSAT for pretraining because it provides multispectral information.
+    We believe it can be more helpful for the system because previous works used NDVI which uses spectral bands, as nearinfrared (NIR), that are not available for RGB images.
+    We could have used BigEarthNet but due to the limitations in computation it's not feasible to train in a reasonable time over the whole dataset.
+
+    As we have said earlier, EuroSAT provides a dataset with images from Sentinel-2 which is the same provider as the data
+    we have manually labelled for the classification of the floating vegetation.
+
+    To test the system capabilities to detect floating vegetation mats a small dataset has been gathered with 140 labels.
+    The labels are rectangles where the area has or does not have vegetation floating in water.
+    The labelled data consists in a table with the ROI being defined by the corner coordinates in WKT format, the label and the date
     of the image where it was located.
-    With that information the image can be extracted from the sentinel-2 data
+    An example of two images can be seen at figure~\ref{fig:vegetation_example}.
+    This dataset has been captured manually by the researchers at \textcolor{red}{Universidad de Valencia. IS IT?!}
+    With that information the image can be extracted from the sentinel-2 Open Access Hub.
+    Sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper} and Python which makes an easy integration with the deep learning ecosystem.
 
-    The sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper}
-
-    Eurosat dataset~\cite{helber2019eurosat} is a sentinel-2 dataset.
+    \begin{figure}[h]
+        \centering
+        \subfloat{{\includegraphics[width=4cm]{figure_no_algae} }}%
+        \qquad
+        \subfloat{{\includegraphics[width=4cm]{figure_with_algae} }}%
+        \caption{On the left a 64x64 crop of an image without vegetation. On the right a 64x64 crop of an image with vegetation.
+        In red, the rectangle with the coordinates where the label has been asigned.}
+        \label{fig:vegetation_example}
+    \end{figure}
 
 
     \section{Approach}
+    In this work we use a self-supervised learning (SSL from now) architecture as they have shown to generate strong baseline models.
+    Following a regime of SSL we can generate a model that is able to output high quality embeddings which are not
+    as good as supervised methods but allow to use huge amounts of data before fine-tuning in the domain specific to our interest.
+
+    In this paper we separate the work in two steps: model pretraining and the classification head training.
+
+    For the pretrained model we will use a Barlow Twins~\cite{barlowtwins} approach as it is a simple but powerful system for
+    SSL.
 
     \subsection{Model pretraining}
+    Barlow Twins differentiates itself from other methods as it is more resistant to a unique embedding collapsed solution.
+    Also, it only uses one neural network reducing the usage of memory during training.
+
+    We mostly follow the same setup as the original publication~\cite{barlowtwins} with some differences to adapt it to out use case.
+    The backbone architecture used is a ResNet50~\cite{he2015deep} with 2048 outputs then connected to a projector network as in the original work.
+
+    \begin{figure}
+        \centering
+        \includegraphics[width=9cm]{Resnet50}
+        \caption{Architecture of Resnet50}
+        \label{fig:resnet50}
+    \end{figure}
+
+    \subsubsection{Data augmentation}
+    In the original work they use a series of image augmentations that we can't apply in our system.
+    Some of the image augmentations as solarization, color jitter and conversion to grayscale do not make sense in multi-spectral images.
+
+    Solarization is normally implemented as a clipping value in the luminance channel, it is not possible to convert multi-spectral data to
+    a colorspace that separates luminance as this is based on human perception.
+    So we decide to not use solarization in the image augmentation pipeline.
+
+    Color jitter is also implemented as a conversion to LAB where the channels A and B are randomly increased or decreased from their mean value.
+    In our case we decide to do the same for every band of the image as it is assumed to be the closer behaviour.
+
+    The conversion to grayscale does not make sense either, so it is not used too.
+
+    Finally, as we are using EuroSAT for pretraining we are limited on the size of the images as they have 64x64, we do not want to change the scale of the images.
+    For this we choose to add affine transforms to the images to then crop them back to 64x64.
+    The goal of this augmentation is changing the shape of the objects of the image to create more variety and avoid overfitting.
+
+    \subsubsection{Optimization}
+    We follow the same protocol as in the original work~\cite{barlowtwins} which follow the same as BYOL~\cite{grill2020bootstrap}.
+    Use of LARS optimizer and training for 1000 epochs.
+    We keep all hyperparameters the same other than batch size, where we use 256 instead of 2048 as that is the maximum we could fit in memory.
+    Using 256 instead of 2048 is going to potentially cause a degradation in performance as~\citet{grill2020bootstrap, chen2020simple, barlowtwins}
+    show, the bigger the batch size the better performance there is during training.
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=9cm]{train_loss}
+        \caption{Training loss graph.}
+        \label{fig:training_loss_graph}
+    \end{figure}
 
     \subsection{Classification model}
+    Once the backbone was trained we freeze the weights of all the Resnet layers and append to the embeddings output node a series of fully connected layers.
+    It consists in 3 layers, one with 128 neurons, followed by one with 32 neurons and a final one with as many neurons as the classification problem has.
+    In our case we are going to test the presence of vegetation mats in the water or not so there will be only one output.
 
-    \subsection{Evaluation}
+    \subsubsection{Data augmentation}
+    For fine-tuning we use the same data augmentation protocol than in the pretraining but applied to the new dataset.
 
-
-
-    Doing self-supervised learning could be useful to fight the data scarcity.
-    As the dataset will be small, a self-training step will be useful to generate
-    a powerful embedding space to the train a classifer:
-    https://github.com/satellite-image-deep-learning/techniques#self-supervised-unsupervised--contrastive-learning
-    https://ermongroup.github.io/blog/tile2vec/
-    https://github.com/vladan-stojnic/CMC-RSSR
-
-    With the embeddings of the patch maybe and MLP per pixel can classify the thingy.
+    \subsubsection{Optimization}
+    For fine-tuning a batch size of 32 is used as they whole dataset is only ~140 images.
+    Binary cross entropy is used as loss function and the adam optimizer with learning rate of 1e-3 is used.
+    The model then it is trained for 20 epochs or until the loss stabilizes.
 
 
-    the previous idea is cool but SAM exists now so maybe it can be used to segment the algae patch
-    using a point inside the ROI we have.
-
-    the we can direct the search of more patches based on the surrounding water.
-    The hypothesis is that water has X conditions that create the growth of this so if this conditions
-    are meet then the should this floaty thing somewhere in this water mass.
-
-
-    Comparison with other pretrained models as moco form torchgeo:
-    https://torchgeo.readthedocs.io/en/stable/api/models.html#torchgeo.models.resnet50 which is trained with MOCO and https://github.com/zhu-xlab/SSL4EO-S12 dataset.
-
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=9cm]{tsne_eurosat}
+        \caption{t-SNE visualization of EuroSAT test set.}
+        \label{fig:tsne_eurosat}
+    \end{figure}
 
     \section{Main results}
 
+    \subsection{Eurosat embeddings visualization}
+
+    In figure~\ref{fig:training_loss_graph} the training graph can be seen where there are no big steps in the loss which means the training was stable and converging.
+    A sudden change on the loss function could have indicated a collapse of the embeddings but this does not seem to happen.
+
+    To check that the model is generating embeddings are able to represent the classes of the EuroSAT data we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
+    This technique allows to easily visualize embeddings of high dimensional data as it cluster together data with similar values while it moves away
+    values that are further away.
+    In figure~\ref{fig:tsne_eurosat} we can visualize the representation.
+    We can see a clear cluster for the SeaLake class.
+    Also, we can observe how HerbaceousVegetation, PermanentCrop, AnnualCrop, Forest and Pasture are found more or less mixing with each other.
+
+    Residential and Industrial are mostly found together which makes sense as they have a similar appearance from satellite images.
+
+    \subsection{Eurosat finetuning}
+
+    \subsection{Eurosat image retreival}
+
+    \subsection{Custom vegetation dataset embeddings visualization}
+
+    \subsection{Custom vegetation dataset finetuning}
+
+    \subsection{Custom vegetation dataset image retreival}
+
+
+
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=9cm]{tsne_vegetation}
+        \caption{t-SNE visualization of the custom dataset.}
+        \label{fig:tsne_vegetation}
+    \end{figure}
+
+    \textcolor{red}{Comparison with other pretrained models as moco form torchgeo:}
+    https://torchgeo.readthedocs.io/en/stable/api/models.html#torchgeo.models.resnet50 which is trained with MOCO and https://github.com/zhu-xlab/SSL4EO-S12 dataset.
+
 
     \section{Future work}
-    Use more data as for example BigEarth dataset, or others listed to increase pretraining time thus variety of the dataset.
+    \textcolor{red}{
+        Use more data as for example BigEarth dataset, or others listed to increase pretraining time thus variety of the dataset.
 
-    Use modern architectures based on transformers as they show to be better in some cases.
+        Use modern architectures based on transformers as they show to be better in some cases.
 
-    Others SSL training systems as DINOv2~\cite{DINO} show potential to stable trainings.
+        Others SSL training systems as DINOv2~\cite{DINO} show potential to stable trainings.
 
-    Distillation to improve the execution time.
+        Distillation to improve the execution time.
 
-    Does the image retreival scale to other areas of the world? The system is trained with data of a limited area of the world.
-    If this was tested in an area with different weather conditions or different time of the year, would it perform in a similar way?
+        Does the image retreival scale to other areas of the world? The system is trained with data of a limited area of the world.~\cite{de2021continual, purushwalkam2022challenges, kirkpatrick2017overcoming, 10135093}
+        If this was tested in an area with different weather conditions or different time of the year, would it perform in a similar way?
+
+    }
 
 
     \section{Conclusions}
