@@ -36,7 +36,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \begin{abstract}
         The Copernicus programme~\cite{whatiscopernicus} is an Earth observation component of the European Union Space
         Programme.
-        One of the missions inside the programme is sentinel-2~\cite{sentinel-2} with 2 satellites orbiting around the
+        One of the missions inside the programme is Sentinel-2~\cite{sentinel-2} with 2 satellites orbiting around the
         earth.
         The two satellites, Sentinel-2A and Sentinel-2B, can provide images in 13 different bands with a resolution up
         to 10m per pixel.
@@ -45,7 +45,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         research fields as cropland, glacier or lake monitoring.
 
         In this work we focus our attention at water quality monitoring.
-        During the study of several lakes in the Spanish territory, patches of an invasive specie were found floating in the water.
+        During the study of several lakes in the Spanish territory, patches of an invasive species were found floating in the water.
         Finding out when, where and why these plants appear is of great interest for researchers.
         Its detection is a manual process through the use of common remote-sensing indices as NDVI~\cite{NDVIsource}
         and water segmentation.
@@ -69,7 +69,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Yet, this global economy also has some disadvantages.
     Due to the global transport network and the big distances we can travel, humans have become an important vector of movement of species
     between different ecosystems~\cite{invasive_species}.
-    Non-native species can become threads to biological ecosystems and disrupt all sort of environments,
+    Non-native species can become threats to biological ecosystems and disrupt all sort of environments,
     from lakes or forests to whole countries~\cite{bhlitem21490}.
 
     For many years researchers have been tracking and studying different invasive vegetation~\cite{huang2009applications, aguir2013, donyana1, donyana2} species.
@@ -90,12 +90,12 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     For the use of the system, fine-tuning a classification head becomes trivial with only hundreds of images with positive and negative
     samples of the target classes.
-    Although, because the model can generate embeddings from any sentinel-2 image it cn also be used as a tool for image retrieval
+    Although, because the model can generate embeddings from any Sentinel-2 image it can also be used as a tool for image retrieval
     where the researcher can provide example images of what is looking for and the system will return the closest images that
     have been indexed.
 
     For this project, images have been sourced from the pair of satellites Sentinel-2~\cite{sentinel-2}.
-    These satellites haven been operating since 2015 providing remote sensing capabilities in the range of latitudes between 56ºS and 84ºN\@.
+    These satellites haven been operating since 2015 providing remote sensing capabilities in the range of latitudes between 56º S and 84º N\@.
     This satellite can pass above the same point every 5 days allowing researchers and companies to track specific locations
     to study how they change on time.
     This satellite has 13 different bands or wavelengths with a resolution up to 10m per pixel.
@@ -104,12 +104,12 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Another use is the tracking of water levels of different lakes or the effect of flooding and natural catastrophes.
 
     Remote sensing has its own set of tools, approaches and problems.
-    Some research is approached as a traditional computer vision problem were the researcher will
-    generate their own heuristics to be able to track the metric they are interested into.
+    Some research is approached as a traditional computer vision problem were the researchers will
+    generate their own heuristics to be able to track the metric they are interested in.
     An example of this is the NDVI~\cite{NDVIsource} metric which uses the bands from near infrared and red to
     measure the leaf water content and chlorophyll content~\cite{TUCKER1979127}.
 
-    One of the problems of the heuristic approach is it own simplicity, it is excellent at measuring
+    One of the problems of the heuristic approach is its own simplicity, it is excellent at measuring
     vegetation, but it also comes with its own problems.
     NDVI for example, is quite sensitive to the amount of atmosphere there is between the capture system and the target and
     the behaviour compared between different capture system is not constant~\cite{Huang2021}.
@@ -118,15 +118,15 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     based on the data provided of the problem.
 
     Thanks to the increasing amount of satellites and aerial programs, there are many different providers with remote sensing capabilities.
-    Later on in section~\ref{sec:dataset} to dive deeper in some of the data available today but nevertheless here some details of the Sentinel-2 platform
+    In section~\ref{sec:dataset} we will delve deeper into some of the data available today but nevertheless here some details of the Sentinel-2 platform
     which is used in this project:
     \begin{itemize}
         \item 4 bands at 10 meters resolution per pixel.
         \item 6 bands at 20 meters resolution per pixel.
         \item 3 bands at 60 meters resolution per pixel.
-        \item Range of latitudes between 56ºS and 84ºN.
+        \item Range of latitudes between 56º S and 84º N.
         \item Visit the same location with the same angle every 10 days or 5 days using two satellites.
-        \item Tiles of 290km in size.
+        \item Tiles of 290 km in size.
         \item 10980x10980 pixels of resolution.
     \end{itemize}
     The amount of data available is quite big, the problem is gathering insights of it as there's not as much labelled data
@@ -135,11 +135,11 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     floating vegetation.
 
     In this project we study an improved pipeline for ease of detection of this vegetation in lakes but also provide a tool
-    to find other regions of interest and similar to them.
+    to retrieve similar images in a tile that are a region of our interest.
     Currently, there are some lakes that are being tracked in a manual way where the researchers would apply several filters to detect them.
     This research makes use of data from the Cedillo dam in Spain spanning from the town of Cedillo to Alcántara.
     In figure~\ref{fig:satellite-image-airbus} an example of the vegetation mat can be seen.
-    Other researchers have work in similar projects in Doñana National park (Spain)~\cite{donyana1, donyana2} or California state (USA)~\cite{rs14133013}.
+    Other researchers have worked in similar projects in Doñana National park (Spain)~\cite{donyana1, donyana2} or California state (USA)~\cite{rs14133013}.
     These approaches can't scale to more lakes without more people looking for them as the tools currently used are targeted
     for specific use cases and heuristics need to be developed for each individual case.
     So doing a search at a global scale can not even be considered.
@@ -155,21 +155,21 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \section{Related work}
     A big concern is the damage floating vegetation create for the biodiversity of aquatic areas and how this mats can cover the sunlight for species that live underwater.
-    There are authors that have work in the detection and tracking of these mats~\cite{donyana1, donyana2,rs14133013, srilanka_veg, 10.3389/fmars.2022.1004012} in different areas of the world.
+    There are authors that have worked in the detection and tracking of these mats~\cite{donyana1, donyana2,rs14133013, srilanka_veg, 10.3389/fmars.2022.1004012} in different areas of the world.
 
     There are several approaches that can be followed:
     \subsection*{Heuristic based methods}
 
     Authors like~\citet{srilanka_veg, 10.3389/fmars.2022.1004012} use pixel level classification models with manually annotated data from satellite image but also UAVs.
-    Depending on the authors, there's different classes they use as target for the classification system.
+    Depending on the authors, there are different classes they use as target for the classification system.
     For example \citet{rs14133013} uses 8 classes: 4 different surface level species, one for submerged vegetation, one for non-photosynthetic vegetation, soil and water.
     To label the data the authors generate polygons of areas in the water based on GPS data from in-situ measurements and use GIS technologies to match them with the images from the satellite.
 
-    \citet{10.3389/fmars.2022.1004012} also follow a similar approach taking measurements of the reflectance of the different classes in situ to then match this values to the aerial images.
+    \citet{10.3389/fmars.2022.1004012} also follow a similar approach taking measurements of the reflectance of the different classes in-situ to then match this values to the aerial images.
     Then they use a SVM based classification technique to train a model due to the good performance they offer with low amounts of data~\cite{Cortes1995}.
 
     Other works as \citet{rs12244021} achieve a good performance for a country scale detection system.
-    In their research they make use of a multistage system where: First, water is detected using the index MNDWI, then a second stage to detect vegetation in the water using NDVI index then a classifier to
+    In their research they make use of a multistage system where: First, water is detected using the index MNDWI, then a second stage to detect vegetation in the water using NDVI index, then a classifier to
     identify different species of vegetation in the water.
     This is a complete end-to-end approach that accomplish what we are looking for in this project but there are number of parameters and heuristics that need to be adjusted to make the system to work.
     As another disadvantage is that it focuses in one single specie, so the parameters and thresholds of the multistage system will have to be adapted to each new problem or situation.
@@ -178,7 +178,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection*{Data driven methods}
     Since the appearance of AlexNet~\cite{NIPS2012_c399862d}, deep neural networks have become state of the art systems for visual recognition.
-    The problem of deep learning is the amount of data that is required to train them effectively.
+    The problem of deep learning models is the amount of data that is required to train them effectively.
     This is a big problem for the detection of this plants as many of the research conducted in the past required having researchers in-situ to capture the data that then
     would be used to create a system for tracking and detection.
 
@@ -209,18 +209,18 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     The gathering of data required to be on-site can be reduced with the use of labelling tools to assist the researchers.
     For example, some researchers used in-situ measurements to then draw polygons that delimited the pixels that covered the area of interest.
-    Nowadays with the use of tools as Segment Anything~\cite{kirillov2023segment} which allows segmenting any type of image based on priors, the labelling time would be much shorter.
+    Nowadays with the use of tools as Segment Anything (SAM)~\cite{kirillov2023segment} which allows segmenting any type of image based on priors, the labelling time would be much shorter.
     These priors could be points or bounding boxes provided as input instead of whole polygons that take much longer to draw.
-    In our case, as the dataset contains of few images with tenths of bounding boxes, SAM could be used to find the perimeter
+    In our case, as the dataset contains few images with tenths of bounding boxes, SAM could be used to find the perimeter
     of the vegetation mats and be used as inputs to train a segmentation model.
-    We have images of the whole earth if we can have enough images with ground truths as in figure~\ref{fig:tile-segmented} we could train a system to segment this bodies in
-    each tile so as the satellite is moving around the earth an automated system could run when these tiles are being generated in real-time.
+    We have images of the whole earth if we can have enough images with ground truths as in figure~\ref{fig:tile-segmented}.
+    We could train a system to segment this bodies in each tile so as the satellite is moving around the earth, an automated system could run when these tiles are being generated in real-time.
 
     \begin{figure}[h]
         \centering
         \includegraphics[width=9cm]{segmented_tile}
         \caption{\textcolor{red}{IMAGE NEEDS TO BE CHANGED TO ONE OF OUR PROJECT:
-        On the left a crop of a tile from sentinel-2. On the right a segmented image of the crop showing the
+        On the left a crop of a tile from Sentinel-2. On the right a segmented image of the crop showing the
         location of the vegetation mat.}}
         \label{fig:tile-segmented}
     \end{figure}
@@ -231,14 +231,14 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     These are mostly aerial or from satellites.
     Depending on the resolution and spectral requirements different datasets can be used.
     For example for semantic segmentation SEN12MS~\cite{SEN12MS_dataset} is available with multi-spectral images
-    in SAR and the 13 bands of sentinel and labels for land cover and land use.
-    Other semantic segmentation datasets as Postdam~\cite{postdam_dataset} provide high resolutionimages, 5cm per pixel of
+    in SAR and the 13 bands of Sentinel and labels for land cover and land use.
+    Other semantic segmentation datasets as Postdam~\cite{postdam_dataset} provide high resolution images, 5cm per pixel of
     city areas.
 
     The biggest datasets available for classification task are BigEarthNet~\cite{bigearthnet}, EuroSAT~\cite{helber2019eurosat},
     PatternNet~\cite{patternet} or Million-AID~\cite{millionaid}.
 
-    Some of them as BigEarthNet or EuroSAT include multispectral data as they come from Sentinel-2, but others like PatterNet or Million-AID are restricted to RGB data.
+    Some of them as BigEarthNet or EuroSAT include multispectral data (MSI) as they come from Sentinel-2, but others like PatterNet or Million-AID are restricted to RGB data.
     Due to the higher information that multispectral datasets provide for some research it is worth the use of MSI rather than RGB\@.
 
     In our work we choose to use EuroSAT for pretraining because it provides multispectral information.
@@ -249,12 +249,12 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     we have manually labelled for the classification of the floating vegetation.
 
     To test the system capabilities to detect floating vegetation mats a small dataset has been gathered with 140 labels.
-    The labels are rectangles where the area has or does not have vegetation floating in water.
-    The labelled data consists in a table with the ROI being defined by the corner coordinates in WKT format, the label and the date
+    The labels are rectangles where the area can eventually have vegetation floating in water.
+    The labelled data consists in a table with the region of interest (ROI) being defined by the corner coordinates in WKT format, the label and the date
     of the image where it was located.
     An example of two images can be seen at figure~\ref{fig:vegetation_example}.
-    This dataset has been captured manually by the researchers at \textcolor{red}{Universidad de Valencia. IS IT?!}
-    With that information the image can be extracted from the sentinel-2 Open Access Hub.
+    This dataset has been labelled manually for this work.
+    With that information the image can be extracted from the Sentinel-2 Open Access Hub.
     Sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper} and Python which makes an easy integration with the deep learning ecosystem.
 
     \begin{figure}[h]
@@ -263,13 +263,13 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \qquad
         \subfloat{{\includegraphics[width=4cm]{figure_with_algae} }}%
         \caption{On the left a 64x64 crop of an image without vegetation. On the right a 64x64 crop of an image with vegetation.
-        In red, the rectangle with the coordinates where the label has been asigned.}
+        In red, the rectangle with the coordinates where the label has been assigned.}
         \label{fig:vegetation_example}
     \end{figure}
 
 
     \section{Approach}
-    In this work we use a self-supervised learning (SSL from now) architecture as they have shown to generate strong baseline models.
+    In this work we use a self-supervised learning (SSL) architecture as they have shown to generate strong baseline models.
     Following a regime of SSL we can generate a model that is able to output high quality embeddings which are not
     as good as supervised methods but allow to use huge amounts of data before fine-tuning in the domain specific to our interest.
 
@@ -334,7 +334,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \subsubsection{Optimization}
     For fine-tuning a batch size of 32 is used as they whole dataset is only ~140 images.
     Binary cross entropy is used as loss function and the adam optimizer with learning rate of 1e-3 is used.
-    The model then it is trained for 20 epochs or until the loss stabilizes.
+    The model is then trained for 20 epochs or until the loss stabilizes.
 
 
     \begin{figure}[h]
@@ -352,7 +352,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     A sudden change on the loss function could have indicated a collapse of the embeddings but this does not seem to happen.
 
     To check that the model is generating embeddings are able to represent the classes of the EuroSAT data we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
-    This technique allows to easily visualize embeddings of high dimensional data as it cluster together data with similar values while it moves away
+    This technique allows to easily visualize embeddings of high dimensional data as it clusters together data with similar values while it moves away
     values that are further away.
     In figure~\ref{fig:tsne_eurosat} we can visualize the representation.
     We can see a clear cluster for the SeaLake class.
@@ -360,15 +360,15 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     Residential and Industrial are mostly found together which makes sense as they have a similar appearance from satellite images.
 
-    \subsection{Eurosat finetuning}
+    \subsection{Eurosat fine-tuning}
 
-    \subsection{Eurosat image retreival}
+    \subsection{Eurosat image retrieval}
 
     \subsection{Custom vegetation dataset embeddings visualization}
 
-    \subsection{Custom vegetation dataset finetuning}
+    \subsection{Custom vegetation dataset fine-tuning}
 
-    \subsection{Custom vegetation dataset image retreival}
+    \subsection{Custom vegetation dataset image retrieval}
 
 
 
