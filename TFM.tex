@@ -257,6 +257,16 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     With that information the image can be extracted from the Sentinel-2 Open Access Hub.
     Sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper} and Python which makes an easy integration with the deep learning ecosystem.
 
+    This dataset has three labels.
+    The label `no vegetation' indicate images of the same coordinates as the ones marked as `vegetation' but in a different date, so there is only water in the ROI\@.
+    The figure~\ref{fig:vegetation_example} shows how do they look like.
+
+    The label `unknown' shows random patches of the same size as the labelled images from the same tile.
+    The assumption is similar to the one done in other works with contrastive learning as simCLR~\cite{chen2020simple, jean2019tile2vec}.
+    Data points that are far away from the anchor image are probably not the same as they are not close to it.
+    Then these points are labelled with 0.1 probability to be aquatic vegetation, so we can consider it as a weak label in the dataset.
+
+
     \begin{figure}[h]
         \centering
         \subfloat{{\includegraphics[width=4cm]{figure_no_algae} }}%
@@ -283,7 +293,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Also, it only uses one neural network reducing the usage of memory during training.
 
     We mostly follow the same setup as the original publication~\cite{barlowtwins} with some differences to adapt it to out use case.
-    The backbone architecture used is a ResNet50~\cite{he2015deep} with 2048 outputs then connected to a projector network as in the original work.
+    The backbone architecture used is a ResNet50~\cite{he2015deep} shown in figure~\ref{fig:resnet50} with 2048 outputs then connected to a projector network as in the original work.
 
     \begin{figure}
         \centering
@@ -325,15 +335,20 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection{Classification model}
     Once the backbone was trained we freeze the weights of all the Resnet layers and append to the embeddings output node a series of fully connected layers.
-    It consists in 3 layers, one with 128 neurons, followed by one with 32 neurons and a final one with as many neurons as the classification problem has.
-    In our case we are going to test the presence of vegetation mats in the water or not so there will be only one output.
+    It is common in the literature for SSL to append a linear layer with as many outputs as the classification problem.
+    In our case we are going to test two classification problems.
+    First classification on EuroSAT test set for the 10 classes available.
+    Then for the presence of aquatic vegetation mats in the water.
 
     \subsubsection{Data augmentation}
-    For fine-tuning we use the same data augmentation protocol than in the pretraining but applied to the new dataset.
+    For fine-tuning we use the same data augmentation protocol than in the pretraining.
 
     \subsubsection{Optimization}
-    For fine-tuning a batch size of 32 is used as they whole dataset is only ~140 images.
-    Binary cross entropy is used as loss function and the adam optimizer with learning rate of 1e-3 is used.
+    For EuroSAT classification a batch size of 256 is used and a learning rate of 0.1 with the Adam optimizer for 50 epochs of trainning.
+    Then CosineAnnealingLR~\cite{loshchilov2017sgdr} is used during training.
+
+    For fine-tuning the aquatic vegetation mat classifier a batch size of 32 is used as they whole dataset is only ~140 images.
+    Binary cross entropy is used as loss function and the adam optimizer with learning rate of $1\cdot10^{-3}$ is used.
     The model is then trained for 20 epochs or until the loss stabilizes.
 
 
@@ -344,6 +359,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \label{fig:tsne_eurosat}
     \end{figure}
 
+
     \section{Main results}
 
     \subsection{Eurosat embeddings visualization}
@@ -351,8 +367,8 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     In figure~\ref{fig:training_loss_graph} the training graph can be seen where there are no big steps in the loss which means the training was stable and converging.
     A sudden change on the loss function could have indicated a collapse of the embeddings but this does not seem to happen.
 
-    To check that the model is generating embeddings are able to represent the classes of the EuroSAT data we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
-    This technique allows to easily visualize embeddings of high dimensional data as it clusters together data with similar values while it moves away
+    To check that the model is generating embeddings which are able to represent the classes of the EuroSAT data we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
+    This technique allows for easy embeddings visualization of high dimensional data as it clusters together data with similar values while it moves away
     values that are further away.
     In figure~\ref{fig:tsne_eurosat} we can visualize the representation.
     We can see a clear cluster for the SeaLake class.
@@ -362,15 +378,33 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection{Eurosat fine-tuning}
 
-    \subsection{Eurosat image retrieval}
+    As it can be seen in the table~\ref{table:eurosat_results}, our work does not improve over the supervised use case.
+    But this is not the goal as for the dataset that we use later for the floating vegetation detection we do not have enough
+    data to train a whole neural network.
+    The results show that the embeddings generated from the model are good enough to almost achieve supervised level results,
+    without having access to labelled data.
+
+
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|}
+            \hline
+            Model                                    & Architecture & Accuracy Top-1 \\
+            \hline
+            \hline
+            Supervised                               & Resnet50     & 98.5\%         \\
+            SSL4EO-S12(MoCo)\cite{wang2023ssl4eos12} & Resnet50     & 98.0\%         \\
+            SSL4EO-S12(DINO)\cite{wang2023ssl4eos12} & Resnet50     & 97.2\%         \\
+            SSL+Linear (Ours)                        & Resnet50     & 96.5\%         \\
+            \hline
+        \end{tabular}
+        \caption{Results for eurosat classification model}
+        \label{table:eurosat_results}
+    \end{table}
 
     \subsection{Custom vegetation dataset embeddings visualization}
-
-    \subsection{Custom vegetation dataset fine-tuning}
-
-    \subsection{Custom vegetation dataset image retrieval}
-
-
+    In figure~\ref{fig:tsne_vegetation} we can visualize the representation of the two classes we have labelled plus a set of images
+    with unknown label.
 
     \begin{figure}[h]
         \centering
@@ -379,24 +413,119 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \label{fig:tsne_vegetation}
     \end{figure}
 
-    \textcolor{red}{Comparison with other pretrained models as moco form torchgeo:}
-    https://torchgeo.readthedocs.io/en/stable/api/models.html#torchgeo.models.resnet50 which is trained with MOCO and https://github.com/zhu-xlab/SSL4EO-S12 dataset.
+    In a similar fashion as in figure~\ref{fig:tsne_eurosat}, we can see a separation between the `vegetation' and `no vegetation' labels
+    indicating the model trained on EuroSAT dataset is able to produce significant differences in the embeddings for different classes.
+    So there's a boundary that can be created between the two.
+    In addition, it can be seen the unknown data which is from the same tile is distributed in the representation space not being a single cluster
+    showing again the model has not collapsed.
+
+    \subsection{Custom vegetation dataset fine-tuning}
+    After training the model in the same way as the EuroSAT classifier with our custom dataset, we obtain an accuracy of 79\%.
+    This value is hard to compare to other works as the datasets are not the same neither the same area, so the data is only comparable as they look for the same
+    class but in different environments.
+    The values provided in table~\ref{table:vegetation_results} accounts for the same specie of plant or at least the most similar situation,
+    which is the floating aquatic vegetation in a lake.
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{ |p{2cm}||p{1.5cm}|p{2.2cm}|p{1.3cm}|}
+            \hline
+            Model              & Architecture & Accuracy Top-1 & F1 score \\
+            \hline
+            \hline
+            \citet{rs12244021} & RandomForest & 98\%* 93\%**   & 87\%**   \\
+            \citet{rs14133013} & Index-tuning & 79-91\%***     & -        \\
+            SSL+Linear (Ours)  & Resnet50     & 79\%           & 72\%     \\
+            \hline
+        \end{tabular}
+        \caption{
+            *This score is the accuracy over the detection of vegetation. \\
+            **This score is the accuracy for each class. \\
+            *** This score is for Water Hyacinth and Water Primrose as they are the similar class to the one in our dataset}
+        \label{table:vegetation_results}
+    \end{table}
+
+    This work also approaches the problem as a scene recognition problem, so we classify if an image contains or not aquatic vegetation.
+    This is different as the other works cited in the table~\ref{table:vegetation_results} as they provide a label per pixel.
+
+    Also, we have to take into account our model is an embedding generator, so it can be used with few data to potentially classify any Sentinel-2 image.
+    Our system has been trained with approximately 140 images meanwhile ~\citet{rs12244021} used 462 images and~\citet{rs14133013} used approximately 2400 images.
+    This is 3 times and 17 times fewer data, respectively.
+
+    \begin{table}[h!]
+        \centering
+        \begin{tabular}{ |p{3cm}||p{1.3cm}|p{1.9cm}|p{1cm}|}
+            \hline
+            Model                                    & Architecture & Accuracy Top-1 & F1 score \\
+            \hline
+            \hline
+            SSL4EO-S12(MoCo)\cite{wang2023ssl4eos12} & Resnet50     & 75\%           & 77\%     \\
+            SSL4EO-S12(DINO)\cite{wang2023ssl4eos12} & Resnet50     & 79\%           & 75\%     \\
+            SSL+Linear (Ours)                        & Resnet50     & 79\%           & 72\%     \\
+            \hline
+        \end{tabular}
+        \caption{Comparison with other pretrained models from SSL4EO-S12~\cite{wang2023ssl4eos12}}
+        \label{tab:vegetation_results_ssl}
+    \end{table}
+
+    We also compare our model to a couple of pretrained models from ~\citet{wang2023ssl4eos12}.
+    This project trains models with worldwide Sentinel-2 data with a SSL architecture.
+    We train a linear layer for the two models seen in table~\ref{tab:vegetation_results_ssl}.
+    We train the DINO~\cite{DINO} model with adamW~\cite{loshchilov2019decoupled}, a learning rate of $1\cdot10^{-3}$.
+    Then we train the model based on MoCo~\cite{chen2020mocov2} with adamW~\cite{loshchilov2019decoupled} too and a learning rate of $5\cdot10^{-2}$.
+
+    As seen in table~\ref{tab:vegetation_results_ssl}, even with a smaller dataset compared to SSL4EO-S12, this scene classification problem receives a
+    similar accuracy.
+    The limiting factor in accuracy for the problem is the data.
+    Looking into the dataset and which images are failing, we can observe that some of the images that appear as no vegetation actually have some
+    vegetation
+
+    \begin{figure}[b]
+        \centering
+        \includegraphics[width=9cm]{example_vegetation_retrieval}
+        \caption{Examples of image retreival through similarity. The first image is the queried image and the next 9 images are the closests one in similarity.
+        In this case the queried image has floating aquatic vegetation.}
+        \label{fig:example_vegetation_retrieval}
+    \end{figure}
+
+    \subsection{Image retrieval}
+    The embedding generator can also be used to retrieve similar images with the use of k-nearest neighbors (KNN).
+    Figure~\ref{fig:example_vegetation_retrieval}, figure~\ref{fig:example_no_vegetation_retrieval} and figure~\ref{fig:example_other_retrieval} show how the system can also
+    be used to search for interesting areas for research through similarity instead of index parameter tuning.
+
+
+
+    \begin{figure}[b]
+        \centering
+        \includegraphics[width=9cm]{example_no_vegetation_retrieval}
+        \caption{Same as figure~\ref{fig:example_vegetation_retrieval} but the first image has no aquatic vegetation.}
+        \label{fig:example_no_vegetation_retrieval}
+    \end{figure}
 
 
     \section{Future work}
-    \textcolor{red}{
-        Use more data as for example BigEarth dataset, or others listed to increase pretraining time thus variety of the dataset.
+    In this work the dataset used is quite small and only covers data from Europe.
+    There are bigger datasets as BigEarthNet~\cite{bigearthnet} which cover more areas of the world then bringing more variety to the dataset.
 
-        Use modern architectures based on transformers as they show to be better in some cases.
+    In that line of work, the authors of SSL4EO-S12~\cite{wang2023ssl4eos12} have created a dataset but then another problem needs to be considered
+    and that is the catastrophic forgetting problem studied by ~\citet{kirkpatrick2017overcoming, de2021continual, 10135093, purushwalkam2022challenges}.
 
-        Others SSL training systems as DINOv2~\cite{DINO} show potential to stable trainings.
+    More testing and thoughtful benchmarking needs to be done for different seasons, latitudes and weather conditions need to be done as it is not know
+    how far this similarity metric can go when these variability are not considered.
 
-        Distillation to improve the execution time.
+    This system also uses crops of 64x64 pixels and this might be too big or too small for a generic system.
+    For example in some queried images, this appears to be negative but a small part of the image contains vegetation and this is a classic problem from classification problems,
+    where the target class is not big enough in the whole image.
+    More data with different scales could help to find areas of interests that have different scales.
 
-        Does the image retreival scale to other areas of the world? The system is trained with data of a limited area of the world.~\cite{de2021continual, purushwalkam2022challenges, kirkpatrick2017overcoming, 10135093}
-        If this was tested in an area with different weather conditions or different time of the year, would it perform in a similar way?
+    Another interesting line of work would be the use of other architectures as most of the literature focuses in Resnet.
+    A lot of work has been done with transformers and some systems like ~\cite{wang2023ssl4eos12} have testes ViT~\cite{dosovitskiy2021image} with good results in remote-sensing.
 
-    }
+    \begin{figure}[b]
+        \centering
+        \includegraphics[width=9cm]{example_other_retrieval}
+        \caption{Same as figure~\ref{fig:example_vegetation_retrieval} but the first image is another type different class.}
+        \label{fig:example_other_retrieval}
+    \end{figure}
 
 
     \section{Conclusions}
