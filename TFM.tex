@@ -190,14 +190,14 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \item Coexistence of multiple ground objects
     \end{itemize}
 
-    \subsubsection*{Supervised}
+    \subsubsection{Supervised}
 
     \textcolor{red}{More data driven stuff\cite{9127795, Mendieta2023GFMBG, jean2019tile2vec, akiva2020h2onet}}
     \textcolor{red}{More segmentation stuff \cite{Li_2022, inproceedings, 9460820, kirillov2023segment, akiva2020h2onet, 10135093}}
     Image segmentation has been traditionally expensive to label due to the nature of the label.
     This problem can be solved in different ways.
 
-    \subsubsection*{Self-supervised}
+    \subsubsection{Self-supervised}
 
     There are several approaches for self-learning.
     Generative, predictive and contrastive.
@@ -205,7 +205,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Nowadays, the interest has shifted for contrastive methods as they are showing strong results in comparison with supervised methods.
     \textcolor{red}{Get a bit deeper in self supervised: \cite{wang2022selfsupervised, DINO, barlowtwins, Li_2022, grill2020bootstrap, Jung2021SelfsupervisedLW, li2022efficient, caron2021unsupervised, inproceedings, 9460820}}
 
-    \subsubsection{Decrease of data labelling time}
+    \subsection*{Decrease of data labelling time}
 
     The gathering of data required to be on-site can be reduced with the use of labelling tools to assist the researchers.
     For example, some researchers used in-situ measurements to then draw polygons that delimited the pixels that covered the area of interest.
@@ -520,18 +520,38 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Another interesting line of work would be the use of other architectures as most of the literature focuses in Resnet.
     A lot of work has been done with transformers and some systems like ~\cite{wang2023ssl4eos12} have testes ViT~\cite{dosovitskiy2021image} with good results in remote-sensing.
 
+
+    \section{Conclusions}
+
+    We have explored the application of self-supervised learning to remote-sensing problems.
+    Specifically for the detection of floating aquatic vegetation.
+    As previous works have focused in classical machine learning techniques where multi-stage heuristics need to be used or a lot of data needs
+    to be gathered to be able to train a deep learning model.
+
+    In this work we have made use of SSL to achieve a generic model which is able to generate embeddings from 64x64 images which can be used in two modes:
+    As a backbone for fine-tuning with a low amount of data or as an image retrieval system.
+    In our application we have achieved a 79\% accuracy which is similar to works based on CNNs for the same problem but with the use of 17 times less labelled data.
+
+    The system used as an image retrieval system in remote-sensing is comparable as an index based search made by researchers but instead of the index selection based
+    on the prior knowledge of the ROI, the researcher can just look for similar images to the ones they know.
+
+    \section*{Acknowledgment}
+    I would like to thanks to all the professors at Universidad Internacional Menéndez Pelayo for all the content they have created for this master.
+    Specially thanks to Juan Miguel Soria for the idea of this project and the help and guidance about satellite imaging, remote-sensing and research guidelines.
+
+    Also thanks to Óscar Luaces and Pablo Pérez for the corrections and guide in this work.
+
+    Finally, thanks to all the open source community that make available all the tools that keep research active and advancing without corporate gate-keeping.
+
+
+
+
     \begin{figure}[b]
         \centering
         \includegraphics[width=9cm]{example_other_retrieval}
         \caption{Same as figure~\ref{fig:example_vegetation_retrieval} but the first image is another type different class.}
         \label{fig:example_other_retrieval}
     \end{figure}
-
-
-    \section{Conclusions}
-
-    \section*{Acknowledgment}
-
     \bibliography{refs}
 
 
