@@ -34,10 +34,8 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \maketitle
 
     \begin{abstract}
-        The Copernicus programme~\cite{whatiscopernicus} is an Earth observation component of the European Union Space
-        Programme.
-        One of the missions inside the programme is Sentinel-2~\cite{sentinel-2} with 2 satellites orbiting around the
-        earth.
+        The Copernicus programme is an Earth observation component of the European Union Space Programme.
+        One of the missions inside the programme is Sentinel-2 with 2 satellites orbiting around the earth.
         The two satellites, Sentinel-2A and Sentinel-2B, can provide images in 13 different bands with a resolution up
         to 10m per pixel.
         Bands range from infrared through the visible spectrum to short wave infrared.
@@ -47,12 +45,13 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         In this work we focus our attention at water quality monitoring.
         During the study of several lakes in the Spanish territory, patches of an invasive species were found floating in the water.
         Finding out when, where and why these plants appear is of great interest for researchers.
-        Its detection is a manual process through the use of common remote-sensing indices as NDVI~\cite{NDVIsource}
-        and water segmentation.
-        The problem of this approach is that its not very robust for a global scale search.
+        Its detection is a manual process through the use of common remote-sensing indexes as NDVI and water segmentation.
+        The problem of this approach is its robustness out of the parameters under different locations and settings.
 
         This work proposes an automatic search system of these form of life with a little amount of labelled training data.
-        This is thanks to the use of self-learning techniques applied to remote sensing.
+        Applying self-supervised learning we are able to generate a model which can be fine-tuned with little data providing similar
+        accuracies as other works in the same field.
+        The model without fine-tuning provides image retrieval capabilities without the need of manual selection of visual features.
     \end{abstract}
     \newline
     Code: \href{https://github.com/sorny92/satellite-surface-algae-detection}{github.com/sorny92/satellite-surface-algae-detection}.
@@ -94,7 +93,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     where the researcher can provide example images of what is looking for and the system will return the closest images that
     have been indexed.
 
-    For this project, images have been sourced from the pair of satellites Sentinel-2~\cite{sentinel-2}.
+    For this project, images have been sourced from the pair of satellites Sentinel-2~\cite{sentinel-2} which belong to the Copernicus program~\cite{whatiscopernicus}.
     These satellites haven been operating since 2015 providing remote sensing capabilities in the range of latitudes between 56º S and 84º N\@.
     This satellite can pass above the same point every 5 days allowing researchers and companies to track specific locations
     to study how they change on time.
@@ -146,11 +145,21 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=9cm]{figure_algae_airbus}
+        \includegraphics[width=9cm]{figure_aquatic_plants}
         \caption{Aerial image of an aquatic vegetation floating mat in the Cedillo lake (Spanish-Portuguese border). It can easily be identified as it's distinctive
-        intense green colour in comparison of the water. Images from Airbus, CNES/Airbus, IGP/ DGRF 2023}
+        intense green colour in comparison of the water. Image from Sentinel-2}
         \label{fig:satellite-image-airbus}
     \end{figure}
+
+    Our findings and contributions can be summarized as follows:
+    \begin{enumerate}
+        \begin{enumerate}
+            \item Exploration of self-supervised methods for remote-sensing applications.
+            \item Generation of a feature extractor model for visual representation in remote-sensing.
+            \item Similar accuracies for the task of floating aquatic vegetation detection with fewer labelled data than previous works.
+            \item Demonstrate the system capabilities for image retrieval only using images as input.
+        \end{enumerate}
+    \end{enumerate}
 
 
     \section{Related work}
@@ -192,18 +201,49 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsubsection{Supervised}
 
-    \textcolor{red}{More data driven stuff\cite{9127795, Mendieta2023GFMBG, jean2019tile2vec, akiva2020h2onet}}
-    \textcolor{red}{More segmentation stuff \cite{Li_2022, inproceedings, 9460820, kirillov2023segment, akiva2020h2onet, 10135093}}
-    Image segmentation has been traditionally expensive to label due to the nature of the label.
-    This problem can be solved in different ways.
+    Different tasks can be solved as a supervised problem.
+    In remote sensing we can find pixel-level classification, where each pixel will have a label assigned to it.
+    This is comparable to image segmentation yet the approach to it can differ.
+
+    Works like~\citet{rs12244021} use in-situ data to generate polygons with the expected label for those pixels in the polygon.
+    Then a random forest classifier is trained per pixel so all the image can have each pixel classified.
+    \citet{rs14133013} labels the date in the same way as before but uses the data to find which heuristic works for the aquatic vegetation detection.
+    Modern techniques allow to train convolutional neural networks which allow an end to end approach where you do not need to train
+    a model to classify per pixel but instead your input is the whole image, also called image-to-image~\cite{rs12244140}.
+
+    Pixel-classification or image segmentation can only give information per individual pixel, but for some applications it can be interesting to be able
+    to know which objects we have in the image rather than the area they have as in object detection.
+
+    In our project we focus in scene classification~\cite{9127795} as it can be used to locate regions of interest.
+    This can be understood as a classification task where the input is the whole image as it's classified as a whole rather than per pixel
+    basis.
+
+    Supervised methods normally yield better performance than its unsupervised or self-supervised alternatives.
+    But this comes at a cost of gathering labeled data.
+    The amount of training samples necessary to train from scratch is too high for small research teams or really specific tasks.
+    As we will explore later in section~\ref{sec:dataset}, there are quite a few datasets for remote-sensing applications.
+    The problem arises when these datasets do not fit the task the researchers want to explore.
 
     \subsubsection{Self-supervised}
-
+    Self-supervised learning (SSL) has been shown to close the gap with supervised learning~\cite{gui2023survey}.
+    At a cost of a longer training time, the model can learn features without labels that later can be exploited as a pretrained model.
     There are several approaches for self-learning.
-    Generative, predictive and contrastive.
+    Mainly, generative, predictive and contrastive.
     In the past years the generative approach used to be the most common one with the use of GANs~\cite{goodfellow2014generative, radford2016unsupervised}.
-    Nowadays, the interest has shifted for contrastive methods as they are showing strong results in comparison with supervised methods.
-    \textcolor{red}{Get a bit deeper in self supervised: \cite{wang2022selfsupervised, DINO, barlowtwins, Li_2022, grill2020bootstrap, Jung2021SelfsupervisedLW, li2022efficient, caron2021unsupervised, inproceedings, 9460820}}
+    Nowadays, the interest has shifted for contrastive methods~\cite{chen2020simple, Jung2021SelfsupervisedLW, caron2021unsupervised} as they are showing strong results in comparison with supervised methods.
+    Some of these methods do not require negative labels to generate useful visual features~\cite{DINO, barlowtwins, grill2020bootstrap}.
+    These methods allow exploiting incredible amounts of data, even more than most of the pretrained models that are used nowadays from Imagenet.
+    This is because they are not limited to find negative pairs for each anchor as simCLR~\cite{chen2020simple} is.
+
+    SSL has been also applied for remote-sensing applications.
+    Works like tile2vec~\cite{jean2019tile2vec} exploit the architecture of simCLR~\cite{chen2020simple} to generate a pretrained model that
+    then can be fine-tuned for other downstream tasks.
+    Some projects~\cite{inproceedings, 9460820, Li_2022, akiva2020h2onet} use SSL for semantic segmentation.
+    This is slightly different as works that target image classification as these projects also focus in creating strong pretrained models considering
+    the encoder and decoder instead of just the decoder.
+
+    Even that SSL allows to generate good pretrained models, some sort of labelling needs to be done for the downstream task.
+    Either for testing purposes or fine-tuning the task, researchers need to gather data and label it.
 
     \subsection*{Decrease of data labelling time}
 
@@ -273,7 +313,8 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \qquad
         \subfloat{{\includegraphics[width=4cm]{figure_with_algae} }}%
         \caption{On the left a 64x64 crop of an image without vegetation. On the right a 64x64 crop of an image with vegetation.
-        In red, the rectangle with the coordinates where the label has been assigned.}
+        In red, the rectangle with the coordinates where the label has been assigned.
+        Both images are represented as RGB, yet they have 13 color channels.}
         \label{fig:vegetation_example}
     \end{figure}
 
@@ -352,7 +393,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     The model is then trained for 20 epochs or until the loss stabilizes.
 
 
-    \begin{figure}[h]
+    \begin{figure}[t]
         \centering
         \includegraphics[width=9cm]{tsne_eurosat}
         \caption{t-SNE visualization of EuroSAT test set.}
@@ -406,7 +447,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     In figure~\ref{fig:tsne_vegetation} we can visualize the representation of the two classes we have labelled plus a set of images
     with unknown label.
 
-    \begin{figure}[h]
+    \begin{figure}[t]
         \centering
         \includegraphics[width=9cm]{tsne_vegetation}
         \caption{t-SNE visualization of the custom dataset.}
@@ -427,7 +468,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     which is the floating aquatic vegetation in a lake.
     \begin{table}[h!]
         \centering
-        \begin{tabular}{ |p{2cm}||p{1.5cm}|p{2.2cm}|p{1.3cm}|}
+        \begin{tabular}{ |p{2.2cm}||p{1.5cm}|p{2.2cm}|p{1cm}|}
             \hline
             Model              & Architecture & Accuracy Top-1 & F1 score \\
             \hline
@@ -479,7 +520,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     Looking into the dataset and which images are failing, we can observe that some of the images that appear as no vegetation actually have some
     vegetation
 
-    \begin{figure}[b]
+    \begin{figure}[t]
         \centering
         \includegraphics[width=9cm]{example_vegetation_retrieval}
         \caption{Examples of image retreival through similarity. The first image is the queried image and the next 9 images are the closests one in similarity.
@@ -494,7 +535,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
 
-    \begin{figure}[b]
+    \begin{figure}[t]
         \centering
         \includegraphics[width=9cm]{example_no_vegetation_retrieval}
         \caption{Same as figure~\ref{fig:example_vegetation_retrieval} but the first image has no aquatic vegetation.}
@@ -518,7 +559,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     More data with different scales could help to find areas of interests that have different scales.
 
     Another interesting line of work would be the use of other architectures as most of the literature focuses in Resnet.
-    A lot of work has been done with transformers and some systems like ~\cite{wang2023ssl4eos12} have testes ViT~\cite{dosovitskiy2021image} with good results in remote-sensing.
+    A lot of work has been done with transformers and some systems like ~\citet{wang2023ssl4eos12, li2022efficient} have tested ViT~\cite{dosovitskiy2021image} with good results in remote-sensing.
 
 
     \section{Conclusions}
@@ -546,7 +587,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
 
-    \begin{figure}[b]
+    \begin{figure}[t]
         \centering
         \includegraphics[width=9cm]{example_other_retrieval}
         \caption{Same as figure~\ref{fig:example_vegetation_retrieval} but the first image is another type different class.}
