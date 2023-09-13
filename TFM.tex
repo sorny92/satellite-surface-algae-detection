@@ -244,14 +244,14 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection*{Decrease of data labelling time}
 
-    The gathering of data required to be on-site can be reduced with the use of labelling tools to assist the researchers.
+    On-site data gathering is expensive so it can be reduced with the use of labelling tools to assist the researchers.
     For example, some researchers used in-situ measurements to then draw polygons that delimited the pixels that covered the area of interest.
-    Nowadays with the use of tools as Segment Anything (SAM)~\cite{kirillov2023segment} which allows segmenting any type of image based on priors, the labelling time would be much shorter.
+    Nowadays with the use of tools such as Segment Anything (SAM)~\cite{kirillov2023segment} which allows the segmentation of any type of image based on priors, the labelling time would be much shorter.
     These priors could be points or bounding boxes provided as input instead of whole polygons that take much longer to draw.
-    In our case, as the dataset contains few images with tenths of bounding boxes, SAM could be used to find the perimeter
-    of the vegetation mats and be used as inputs to train a segmentation model.
-    We have images of the whole earth if we can have enough images with ground truths as in figure~\ref{fig:tile-segmented}.
-    We could train a system to segment this bodies in each tile so as the satellite is moving around the earth, an automated system could run when these tiles are being generated in real-time.
+    In our case the dataset contains few images.
+    As we only have dozens of bounding boxes, SAM could be used to find the perimeter of the vegetation mats and be used as inputs to train a segmentation model.
+    Images of the whole earth are being generated all the time through satellites. If we could have enough images with ground truths as in figure~\ref{fig:tile-segmented},
+    we could train a system to segment this bodies in each tile so as the satellite is moving around the earth, an automated system could infer the segmented masks just after the tiles are uploaded.
 
     \begin{figure}[h]
         \centering
@@ -267,41 +267,42 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     For remote sensing tasks there are several sources of data.
     These are mostly aerial or from satellites.
     Depending on the resolution and spectral requirements different datasets can be used.
-    For example for semantic segmentation SEN12MS~\cite{SEN12MS_dataset} is available with multi-spectral images
-    in SAR and the 13 bands of Sentinel and labels for land cover and land use.
-    Other semantic segmentation datasets as Postdam~\cite{postdam_dataset} provide high resolution images, 5cm per pixel of
+    For example, for semantic segmentation, SEN12MS~\cite{SEN12MS_dataset} is available with multi-spectral imaging (MSI)
+    and also synthetic aperture radar (SAR).
+    Providing 13 different wavelength bands and labels for land cover and land use.
+    Other semantic segmentation datasets such as Postdam~\cite{postdam_dataset} provide high resolution images, 5cm per pixel of
     city areas.
 
-    The biggest datasets available for classification task are BigEarthNet~\cite{bigearthnet}, EuroSAT~\cite{helber2019eurosat},
-    PatternNet~\cite{patternet} or Million-AID~\cite{millionaid}.
+    The biggest datasets available for classification tasks are BigEarthNet~\cite{bigearthnet}, EuroSAT~\cite{helber2019eurosat},
+    PatternNet~\cite{patternet} and Million-AID~\cite{millionaid}.
 
-    Some of them as BigEarthNet or EuroSAT include multispectral data (MSI) as they come from Sentinel-2, but others like PatterNet or Million-AID are restricted to RGB data.
+    Examples such as BigEarthNet or EuroSAT include multispectral data (MSI) as they come from Sentinel-2, but others like PatterNet or Million-AID are restricted to RGB data.
     Due to the higher information that multispectral datasets provide for some research it is worth the use of MSI rather than RGB\@.
 
     In our work we choose to use EuroSAT for pretraining because it provides multispectral information.
-    We believe it can be more helpful for the system because previous works used NDVI which uses spectral bands, as nearinfrared (NIR), that are not available for RGB images.
-    We could have used BigEarthNet but due to the limitations in computation it's not feasible to train in a reasonable time over the whole dataset.
+    We believe it can be more helpful for the system because previous works used NDVI which uses spectral bands, such as nearinfrared (NIR), that are not available from RGB images.
+    We could have used BigEarthNet but due to the limitations in computation it is not feasible to train in a reasonable time over the whole dataset.
 
-    As we have said earlier, EuroSAT provides a dataset with images from Sentinel-2 which is the same provider as the data
-    we have manually labelled for the classification of the floating vegetation.
+    As we previously stated, EuroSAT provides a dataset with images from Sentinel-2 which is the same provider as the data
+    we have manually labelled for the classification of the floating aquatic vegetation.
 
-    To test the system capabilities to detect floating vegetation mats a small dataset has been gathered with 140 labels.
+    To test the system's capabilities to detect floating vegetation mats, a small dataset was gathered with 140 labels.
     The labels are rectangles where the area can eventually have vegetation floating in water.
-    The labelled data consists in a table with the region of interest (ROI) being defined by the corner coordinates in WKT format, the label and the date
-    of the image where it was located.
+    The labelled data consists of a table with the region of interest (ROI) being defined by the corner coordinates in WKT format, in addition to
+    the label and the date of the image where it was located.
     An example of two images can be seen at figure~\ref{fig:vegetation_example}.
     This dataset has been labelled manually for this work.
-    With that information the image can be extracted from the Sentinel-2 Open Access Hub.
-    Sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper} and Python which makes an easy integration with the deep learning ecosystem.
+    With that information, the images can be extracted from the Sentinel-2 Open Access Hub.
+    Sentinel-2 data can be loaded with the use of EOReader~\cite{eoreader_paper} and Python which makes for an easy integration with the deep learning ecosystem.
 
     This dataset has three labels.
     The label `no vegetation' indicate images of the same coordinates as the ones marked as `vegetation' but in a different date, so there is only water in the ROI\@.
-    The figure~\ref{fig:vegetation_example} shows how do they look like.
+    Figure~\ref{fig:vegetation_example} shows an example of what they look like.
 
     The label `unknown' shows random patches of the same size as the labelled images from the same tile.
-    The assumption is similar to the one done in other works with contrastive learning as simCLR~\cite{chen2020simple, jean2019tile2vec}.
+    The assumption is similar to the one reached in other works with contrastive learning as simCLR~\cite{chen2020simple, jean2019tile2vec}.
     Data points that are far away from the anchor image are probably not the same as they are not close to it.
-    Then these points are labelled with 0.1 probability to be aquatic vegetation, so we can consider it as a weak label in the dataset.
+    In this case, these points are labelled with 0.1 probability to be aquatic vegetation, so we can consider it as a weak label in the dataset.
 
 
     \begin{figure}[h]
@@ -317,20 +318,20 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 
     \section{Approach}
-    In this work we use a self-supervised learning (SSL) architecture as they have shown to generate strong baseline models.
+    In this work we use self-supervised learning (SSL) as it has been proved to generate strong baseline models.
     Following a regime of SSL we can generate a model that is able to output high quality embeddings which are not
     as good as supervised methods but allow to use huge amounts of data before fine-tuning in the domain specific to our interest.
 
-    In this paper we separate the work in two steps: model pretraining and the classification head training.
+    In this paper we separate the work in two steps: model pretraining and a downstream task, the classification head training.
 
-    For the pretrained model we will use a Barlow Twins~\cite{barlowtwins} approach as it is a simple but powerful system for
+    For the pretrained model we will use the Barlow Twins~\cite{barlowtwins} approach as it is a simple but powerful system for
     SSL.
 
     \subsection{Model pretraining}
     Barlow Twins differentiates itself from other methods as it is more resistant to a unique embedding collapsed solution.
-    Also, it only uses one neural network reducing the usage of memory during training.
+    Also, it only uses one neural network which reduces the usage of memory during training.
 
-    We mostly follow the same setup as the original publication~\cite{barlowtwins} with some differences to adapt it to out use case.
+    We mostly follow the same setup as the original publication~\cite{barlowtwins} with some differences to adapt it to our use case.
     The backbone architecture used is a ResNet50~\cite{he2015deep} shown in figure~\ref{fig:resnet50} with 2048 outputs then connected to a projector network as in the original work.
 
     \begin{figure}
@@ -341,28 +342,28 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \end{figure}
 
     \subsubsection{Data augmentation}
-    In the original work they use a series of image augmentations that we can't apply in our system.
-    Some of the image augmentations as solarization, color jitter and conversion to grayscale do not make sense in multi-spectral images.
+    In the original work they use a series of image augmentations that we can not apply in our system.
+    Some of the image augmentations such as solarization, color jitter and conversion to grayscale do not make sense in multi-spectral images.
 
-    Solarization is normally implemented as a clipping value in the luminance channel, it is not possible to convert multi-spectral data to
+    Solarization is normally implemented as a clipping value in the luminance channel; it is not possible to convert multi-spectral data to
     a colorspace that separates luminance as this is based on human perception.
-    So we decide to not use solarization in the image augmentation pipeline.
+    Therefore, we decided not to use solarization in the image augmentation pipeline.
 
-    Color jitter is also implemented as a conversion to LAB where the channels A and B are randomly increased or decreased from their mean value.
-    In our case we decide to do the same for every band of the image as it is assumed to be the closer behaviour.
+    Color jitter is also implemented as a conversion to LAB colorspace where the channels A and B are randomly increased or decreased from their mean value.
+    In our case, we decided to do the same for every band of the image as it is assumed to be the most similar behaviour.
 
-    The conversion to grayscale does not make sense either, so it is not used too.
+    In addition, the conversion to grayscale does not make sense so it is not used.
 
-    Finally, as we are using EuroSAT for pretraining we are limited on the size of the images as they have 64x64, we do not want to change the scale of the images.
-    For this we choose to add affine transforms to the images to then crop them back to 64x64.
-    The goal of this augmentation is changing the shape of the objects of the image to create more variety and avoid overfitting.
+    Finally, as we are using EuroSAT for pretraining we are limited on the input size of the images as they have a size of 64x64 pixels so we do not want to change the scale of the images.
+    For this we choose to add affine transformations to the images to then crop them back to 64x64 pixels.
+    The goal of this augmentation is to change the shape of the objects of the image to create more variety and avoid overfitting.
 
     \subsubsection{Optimization}
-    We follow the same protocol as in the original work~\cite{barlowtwins} which follow the same as BYOL~\cite{grill2020bootstrap}.
-    Use of LARS optimizer and training for 1000 epochs.
-    We keep all hyperparameters the same other than batch size, where we use 256 instead of 2048 as that is the maximum we could fit in memory.
-    Using 256 instead of 2048 is going to potentially cause a degradation in performance as~\citet{grill2020bootstrap, chen2020simple, barlowtwins}
-    show, the bigger the batch size the better performance there is during training.
+    We follow the same protocol as in the original work~\cite{barlowtwins} which follows the same as BYOL~\cite{grill2020bootstrap}.
+    Firstly, we use LARS optimizer and train the system for 1000 epochs.
+    Then we keep all hyperparameters the same other than batch size, where we use 256 instead of 2048 as that is the maximum we could fit in memory.
+    As shown in ~\citet{grill2020bootstrap, chen2020simple, barlowtwins}, the bigger the batch size the better performance there is during training.
+    So using 256 instead of 2048 will potentially affect the accuracy of the system.
 
     \begin{figure}[h]
         \centering
@@ -372,21 +373,21 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \end{figure}
 
     \subsection{Classification model}
-    Once the backbone was trained we freeze the weights of all the Resnet layers and append to the embeddings output node a series of fully connected layers.
+    Once the backbone was trained, we froze the weights of all the Resnet layers and appended a series of fully connected layers to the embeddings output node.
     It is common in the literature for SSL to append a linear layer with as many outputs as the classification problem.
     In our case we are going to test two classification problems.
-    First classification on EuroSAT test set for the 10 classes available.
-    Then for the presence of aquatic vegetation mats in the water.
+    Firstly, the classification on EuroSAT test set for the 10 classes available.
+    Then for the presence of floating aquatic vegetation in the water.
 
     \subsubsection{Data augmentation}
-    For fine-tuning we use the same data augmentation protocol than in the pretraining.
+    For fine-tuning we use the same data augmentation protocol as in the pretraining.
 
     \subsubsection{Optimization}
-    For EuroSAT classification a batch size of 256 is used and a learning rate of 0.1 with the Adam optimizer for 50 epochs of trainning.
+    For EuroSAT classification a batch size of 256 is used and a learning rate of 0.1 with the Adam optimizer for 50 epochs of training.
     Then CosineAnnealingLR~\cite{loshchilov2017sgdr} is used during training.
 
-    For fine-tuning the aquatic vegetation mat classifier a batch size of 32 is used as they whole dataset is only ~140 images.
-    Binary cross entropy is used as loss function and the adam optimizer with learning rate of $1\cdot10^{-3}$ is used.
+    For fine-tuning the aquatic vegetation mat classifier, a batch size of 32 is used as the whole dataset is only approximately 140 images.
+    Binary cross entropy is used as loss function and the adam optimizer with a learning rate of $1\cdot10^{-3}$ is used.
     The model is then trained for 20 epochs or until the loss stabilizes.
 
 
@@ -402,23 +403,23 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection{Eurosat embeddings visualization}
 
-    In figure~\ref{fig:training_loss_graph} the training graph can be seen where there are no big steps in the loss which means the training was stable and converging.
+    In figure~\ref{fig:training_loss_graph} the training graph shows there are no big steps in the loss which means the training was stable and converging.
     A sudden change on the loss function could have indicated a collapse of the embeddings but this does not seem to happen.
 
-    To check that the model is generating embeddings which are able to represent the classes of the EuroSAT data we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
-    This technique allows for easy embeddings visualization of high dimensional data as it clusters together data with similar values while it moves away
+    To check that the model is generating embeddings which are able to represent the classes of the EuroSAT data, we use t-SNE~\cite{JMLR:v9:vandermaaten08a}.
+    This technique allows for easy visualization of embeddings of high dimensional data as it clusters together data with similar values while it moves away
     values that are further away.
     In figure~\ref{fig:tsne_eurosat} we can visualize the representation.
     We can see a clear cluster for the SeaLake class.
     Also, we can observe how HerbaceousVegetation, PermanentCrop, AnnualCrop, Forest and Pasture are found more or less mixing with each other.
 
-    Residential and Industrial are mostly found together which makes sense as they have a similar appearance from satellite images.
+    Residential and Industrial classes are mostly found together which makes sense as they have a similar appearance from satellite images.
 
     \subsection{Eurosat fine-tuning}
 
-    As it can be seen in the table~\ref{table:eurosat_results}, our work does not improve over the supervised use case.
-    But this is not the goal as for the dataset that we use later for the floating vegetation detection we do not have enough
-    data to train a whole neural network.
+    As can be seen in the table~\ref{table:eurosat_results}, our work does not improve over the supervised use case.
+    However this is not a problem because it is not the goal of the project.
+    Because for the dataset that we use later for the floating vegetation detection we do not have enough data to train a whole neural network.
     The results show that the embeddings generated from the model are good enough to almost achieve supervised level results,
     without having access to labelled data.
 
@@ -442,7 +443,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection{Custom vegetation dataset embeddings visualization}
     In figure~\ref{fig:tsne_vegetation} we can visualize the representation of the two classes we have labelled plus a set of images
-    with unknown label.
+    with an unknown label.
 
     \begin{figure}[t]
         \centering
@@ -453,15 +454,15 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     In a similar fashion as in figure~\ref{fig:tsne_eurosat}, we can see a separation between the `vegetation' and `no vegetation' labels
     indicating the model trained on EuroSAT dataset is able to produce significant differences in the embeddings for different classes.
-    So there's a boundary that can be created between the two.
-    In addition, it can be seen the unknown data which is from the same tile is distributed in the representation space not being a single cluster
+    Therefore, there is a boundary that can be created between the two.
+    In addition, we see that the unknown data which is from the same tile is distributed in the representation space not being a single cluster,
     showing again the model has not collapsed.
 
     \subsection{Custom vegetation dataset fine-tuning}
-    After training the model in the same way as the EuroSAT classifier with our custom dataset, we obtain an accuracy of 79\%.
-    This value is hard to compare to other works as the datasets are not the same neither the same area, so the data is only comparable as they look for the same
+    After training the model in the same way as the EuroSAT classifier with our custom dataset, we obtained an accuracy of 79\%.
+    This value is hard to compare to other works as the datasets are not the same or from the same area, so the data is only comparable as they look for the same
     class but in different environments.
-    The values provided in table~\ref{table:vegetation_results} accounts for the same specie of plant or at least the most similar situation,
+    The values provided in table~\ref{table:vegetation_results} account for the same species of plant or at least the most similar situation,
     which is the floating aquatic vegetation in a lake.
     \begin{table}[h!]
         \centering
@@ -482,12 +483,12 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \label{table:vegetation_results}
     \end{table}
 
-    This work also approaches the problem as a scene recognition problem, so we classify if an image contains or not aquatic vegetation.
-    This is different as the other works cited in the table~\ref{table:vegetation_results} as they provide a label per pixel.
+    This work also approaches the problem as a scene classification problem, so we classify if an image contains floating aquatic vegetation or not.
+    This is different to the other works cited in the table~\ref{table:vegetation_results} as they provide a label per pixel.
 
-    Also, we have to take into account our model is an embedding generator, so it can be used with few data to potentially classify any Sentinel-2 image.
+    Also, we need to consider that our model is an embedding generator, so it can be used with less data to potentially classify any Sentinel-2 image.
     Our system has been trained with approximately 140 images meanwhile ~\citet{rs12244021} used 462 images and~\citet{rs14133013} used approximately 2400 images.
-    This is 3 times and 17 times fewer data, respectively.
+    Therefore for our case, we use 3 times and 17 times less data, respectively.
 
     \begin{table}[h!]
         \centering
@@ -505,17 +506,17 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
         \label{tab:vegetation_results_ssl}
     \end{table}
 
-    We also compare our model to a couple of pretrained models from ~\citet{wang2023ssl4eos12}.
-    This project trains models with worldwide Sentinel-2 data with a SSL architecture.
-    We train a linear layer for the two models seen in table~\ref{tab:vegetation_results_ssl}.
-    We train the DINO~\cite{DINO} model with adamW~\cite{loshchilov2019decoupled}, a learning rate of $1\cdot10^{-3}$.
-    Then we train the model based on MoCo~\cite{chen2020mocov2} with adamW~\cite{loshchilov2019decoupled} too and a learning rate of $5\cdot10^{-2}$.
+    We also compare our model to a couple of pretrained models from~\citet{wang2023ssl4eos12}.
+    This project trains models with worldwide Sentinel-2 data with an SSL architecture.
+    We train a linear layer for the two models as seen in table~\ref{tab:vegetation_results_ssl}.
+    We train the DINO~\cite{DINO} model with adamW~\cite{loshchilov2019decoupled} and a learning rate of $1\cdot10^{-3}$.
+    Then we additionally trained the model based on MoCo~\cite{chen2020mocov2} with adamW~\cite{loshchilov2019decoupled} and a learning rate of $5\cdot10^{-2}$.
 
-    As seen in table~\ref{tab:vegetation_results_ssl}, even with a smaller dataset compared to SSL4EO-S12, this scene classification problem receives a
+    As seen in table~\ref{tab:vegetation_results_ssl}, even with a smaller dataset compared to SSL4EO-S12, this scene classification problem provides a
     similar accuracy.
-    The limiting factor in accuracy for the problem is the data.
-    Looking into the dataset and which images are failing, we can observe that some of the images that appear as no vegetation actually have some
-    vegetation
+    The limiting factor in accuracy for the problem is the data for fine-tuning.
+    By looking into the dataset and which images are failing, we can observe that some of the images that appear as `no vegetation' actually have some
+    vegetation.
 
     \begin{figure}[t]
         \centering
@@ -527,8 +528,9 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \subsection{Image retrieval}
     The embedding generator can also be used to retrieve similar images with the use of k-nearest neighbors (KNN).
+
     Figure~\ref{fig:example_vegetation_retrieval}, figure~\ref{fig:example_no_vegetation_retrieval} and figure~\ref{fig:example_other_retrieval} show how the system can also
-    be used to search for interesting areas for research through similarity instead of index parameter tuning.
+    be used to search for interesting areas for research through similarity instead of using index parameter tuning to analyse images.
 
 
 
@@ -542,18 +544,18 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \section{Future work}
     In this work the dataset used is quite small and only covers data from Europe.
-    There are bigger datasets as BigEarthNet~\cite{bigearthnet} which cover more areas of the world then bringing more variety to the dataset.
+    There are bigger datasets such as BigEarthNet~\cite{bigearthnet} which cover more areas of the world, bringing more variety to the dataset.
 
-    In that line of work, the authors of SSL4EO-S12~\cite{wang2023ssl4eos12} have created a dataset but then another problem needs to be considered
-    and that is the catastrophic forgetting problem studied by ~\citet{kirkpatrick2017overcoming, de2021continual, 10135093, purushwalkam2022challenges}.
+    In that line of work, the authors of SSL4EO-S12~\cite{wang2023ssl4eos12} have created a dataset that aims to have an equal distribution of locations, seasons, and land usage.
+    Sadly, another problem needs to be considered which is the catastrophic forgetting problem studied by ~\citet{kirkpatrick2017overcoming, de2021continual, 10135093, purushwalkam2022challenges}.
 
-    More testing and thoughtful benchmarking needs to be done for different seasons, latitudes and weather conditions need to be done as it is not know
-    how far this similarity metric can go when these variability are not considered.
+    More testing and thoughtful benchmarking needs to be done for different seasons, latitudes and weather conditions as it is not know
+    how far this similarity metric can go when these variables are not considered.
 
-    This system also uses crops of 64x64 pixels and this might be too big or too small for a generic system.
-    For example in some queried images, this appears to be negative but a small part of the image contains vegetation and this is a classic problem from classification problems,
-    where the target class is not big enough in the whole image.
-    More data with different scales could help to find areas of interests that have different scales.
+    This system also uses image crops of 64x64 pixels and this might be too big or too small for a generic system.
+    For example, in some queried images, this appears to be negative but a small part of the image contains vegetation and this is a common failure of classification problems
+    when the target class is not big enough in the whole image.
+    More data with different scales could help to find areas of interests where their scale does not match our system.
 
     Another interesting line of work would be the use of other architectures as most of the literature focuses in Resnet.
     A lot of work has been done with transformers and some systems like ~\citet{wang2023ssl4eos12, li2022efficient} have tested ViT~\cite{dosovitskiy2021image} with good results in remote-sensing.
@@ -561,25 +563,23 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     \section{Conclusions}
 
-    We have explored the application of self-supervised learning to remote-sensing problems.
-    Specifically for the detection of floating aquatic vegetation.
-    As previous works have focused in classical machine learning techniques where multi-stage heuristics need to be used or a lot of data needs
+    We have explored the use of self-supervised learning for remote-sensing applications, specifically for the detection of floating aquatic vegetation.
+    Previous works have mainly focused on classical machine learning techniques, where multi-stage heuristics need to be used or a lot of data needs
     to be gathered to be able to train a deep learning model.
-
-    In this work we have made use of SSL to achieve a generic model which is able to generate embeddings from 64x64 images which can be used in two modes:
+    In this work we made use of SSL to achieve a generic model which is able to generate embeddings from 64x64 images which can be used in two modes:
     As a backbone for fine-tuning with a low amount of data or as an image retrieval system.
-    In our application we have achieved a 79\% accuracy which is similar to works based on CNNs for the same problem but with the use of 17 times less labelled data.
+    In our application we achieved 79\% accuracy which is similar to works based on CNNs for the same problem but with the use of 17 times less labelled data.
 
-    The system used as an image retrieval system in remote-sensing is comparable as an index based search made by researchers but instead of the index selection based
-    on the prior knowledge of the ROI, the researcher can just look for similar images to the ones they know.
+    The system used as image retrieval for remote-sensing is comparable to an index based search made by researchers but instead of the index selection based
+    on the prior knowledge of the ROI, the researcher can just look for similar images to the ones which they are interested in.
 
     \section*{Acknowledgment}
-    I would like to thanks to all the professors at Universidad Internacional Menéndez Pelayo for all the content they have created for this master.
-    Specially thanks to Juan Miguel Soria for the idea of this project and the help and guidance about satellite imaging, remote-sensing and research guidelines.
+    I would like to thank all the professors at Universidad Internacional Menéndez Pelayo for all the content they have created for this master's degree.
+    With specially thanks to Juan Miguel Soria for this project idea and the help and guidance about satellite imaging, remote-sensing and research guidelines.
 
-    Also thanks to Óscar Luaces and Pablo Pérez for the corrections and guide in this work.
+    In addition, I would like to thank Óscar Luaces and Pablo Pérez for the corrections and guidance.
 
-    Finally, thanks to all the open source community that make available all the tools that keep research active and advancing without corporate gate-keeping.
+    Finally, thank you to my comrades in the open source community that provides all the tools that keep research active and allows it to advance without corporate gate-keeping.
 
 
 
