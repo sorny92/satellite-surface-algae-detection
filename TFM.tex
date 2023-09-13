@@ -58,7 +58,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     \newline
 
     \begin{IEEEkeywords}
-        remote-sensing, computer vision, deep-learning, image retrieval, Sentinel-2, self-supervision
+        remote sensing, computer vision, deep learning, image retrieval, Sentinel-2, self-supervised learning, image classification
     \end{IEEEkeywords}
 
 
@@ -152,10 +152,10 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
     Our findings and contributions can be summarized as follows:
     \begin{enumerate}
-            \item Exploration of self-supervised methods for remote-sensing applications.
-            \item Generation of a feature extractor model for visual representation in remote-sensing.
-            \item Similar accuracies for the task of floating aquatic vegetation detection with fewer labelled data than previous works.
-            \item Demonstrate the system capabilities for image retrieval only using images as input.
+        \item Exploration of self-supervised methods for remote-sensing applications.
+        \item Generation of a feature extractor model for visual representation in remote-sensing.
+        \item Similar accuracies for the task of floating aquatic vegetation detection with fewer labelled data than previous works.
+        \item Demonstrate the system capabilities for image retrieval only using images as input.
     \end{enumerate}
 
 
@@ -250,15 +250,15 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     These priors could be points or bounding boxes provided as input instead of whole polygons that take much longer to draw.
     In our case the dataset contains few images.
     As we only have dozens of bounding boxes, SAM could be used to find the perimeter of the vegetation mats and be used as inputs to train a segmentation model.
-    Images of the whole earth are being generated all the time through satellites. If we could have enough images with ground truths as in figure~\ref{fig:tile-segmented},
-    we could train a system to segment this bodies in each tile so as the satellite is moving around the earth, an automated system could infer the segmented masks just after the tiles are uploaded.
+    Images of the whole earth are being generated all the time through satellites.
+    If we could have enough images with ground truths as in figure~\ref{fig:tile-segmented}, we could train a system to segment
+    this bodies in each tile so as the satellite is moving around the earth, an automated system could infer the segmented masks just after the tiles are uploaded.
 
     \begin{figure}[h]
         \centering
-        \includegraphics[width=9cm]{segmented_tile}
-        \caption{\textcolor{red}{IMAGE NEEDS TO BE CHANGED TO ONE OF OUR PROJECT:
-        On the left a crop of a tile from Sentinel-2. On the right a segmented image of the crop showing the
-        location of the vegetation mat.}}
+        \includegraphics[width=8cm]{segmented_tile}
+        \caption{Example of segmentation of floating vegetation in a lake in South Africa. Blue is water segmentation. Green, black and red different indexes used for vegetation segmentation.
+        Left column is top of atmosphere perspective and right column is bottom of atmosphere. Origin: ~\citet{rs12244021}}
         \label{fig:tile-segmented}
     \end{figure}
 
@@ -459,7 +459,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     showing again the model has not collapsed.
 
     \subsection{Custom vegetation dataset fine-tuning}
-    After training the model in the same way as the EuroSAT classifier with our custom dataset, we obtained an accuracy of 79\%.
+    After training the model in the same way as the EuroSAT classifier with our custom dataset, we obtained an accuracy of 86\%.
     This value is hard to compare to other works as the datasets are not the same or from the same area, so the data is only comparable as they look for the same
     class but in different environments.
     The values provided in table~\ref{table:vegetation_results} account for the same species of plant or at least the most similar situation,
@@ -473,7 +473,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
             \hline
             \citet{rs12244021} & RandomForest & 98\%* 93\%**   & 87\%**   \\
             \citet{rs14133013} & Index-tuning & 79-91\%***     & -        \\
-            SSL+Linear (Ours)  & Resnet50     & 79\%           & 72\%     \\
+            SSL+Linear (Ours)  & Resnet50     & 89.7\%         & 88.9\%   \\
             \hline
         \end{tabular}
         \caption{
@@ -497,9 +497,9 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
             Model                                    & Architecture & Accuracy Top-1 & F1 score \\
             \hline
             \hline
-            SSL4EO-S12(MoCo)\cite{wang2023ssl4eos12} & Resnet50     & 75\%           & 77\%     \\
-            SSL4EO-S12(DINO)\cite{wang2023ssl4eos12} & Resnet50     & 79\%           & 75\%     \\
-            SSL+Linear (Ours)                        & Resnet50     & 79\%           & 72\%     \\
+            SSL4EO-S12(MoCo)\cite{wang2023ssl4eos12} & Resnet50     & 89.7\%         & 85.6\%   \\
+            SSL4EO-S12(DINO)\cite{wang2023ssl4eos12} & Resnet50     & 89.7\%         & 88.9\%   \\
+            SSL+Linear (Ours)                        & Resnet50     & 89.7\%         & 88.9\%   \\
             \hline
         \end{tabular}
         \caption{Comparison with other pretrained models from SSL4EO-S12~\cite{wang2023ssl4eos12}}
@@ -568,7 +568,7 @@ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
     to be gathered to be able to train a deep learning model.
     In this work we made use of SSL to achieve a generic model which is able to generate embeddings from 64x64 images which can be used in two modes:
     As a backbone for fine-tuning with a low amount of data or as an image retrieval system.
-    In our application we achieved 79\% accuracy which is similar to works based on CNNs for the same problem but with the use of 17 times less labelled data.
+    In our application we achieved 89\% accuracy which is similar to works based on CNNs for the same problem but with the use of 17 times less labelled data.
 
     The system used as image retrieval for remote-sensing is comparable to an index based search made by researchers but instead of the index selection based
     on the prior knowledge of the ROI, the researcher can just look for similar images to the ones which they are interested in.
