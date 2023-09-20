@@ -27,6 +27,9 @@ pyproj = "^3.6.0"
 cartopy = "0.22.0"
 opencv-python = "^4.8.0"
 jupyter = "*"
+torchmetrics = "*"
+scikit-learn = "*"
+torchgeo = "*"
 
 #AMAZON WE HATE YOU
 boto3 = "1.28.30"
