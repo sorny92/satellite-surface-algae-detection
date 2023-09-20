@@ -1,66 +1,49 @@
-open links:
+# Automatic detection of floating aquatic vegetation from remote sensing data
 
-https://github.com/ermongroup/tile2vec
+## Install deps:
 
-https://openaccess.thecvf.com/content/CVPR2021W/EarthVision/papers/Stojnic_Self-Supervised_Learning_of_Remote_Sensing_Scene_Representations_Using_Contrastive_Multiview_CVPRW_2021_paper.pdf
+```bash
+poetry install
+```
 
-https://openaccess.thecvf.com/content_CVPRW_2020/papers/w11/Russwurm_Meta-Learning_for_Few-Shot_Land_Cover_Classification_CVPRW_2020_paper.pdf
+## Train Barlow Twins
 
-the review
-https://arxiv.org/pdf/2206.13188.pdf
+```bash
+python -m train.barlowtwins.train -h
+```
 
-https://arxiv.org/pdf/2201.13182.pdf
+To run the training with EuroSAT you need to Download EuroSAT:
 
-https://arxiv.org/pdf/2101.11282.pdf
+[Download link](https://github.com/phelber/EuroSAT)
 
-Instance retrieval
-https://arxiv.org/pdf/2101.11282.pdf
+Then you generate a .csv with the train split:
 
-Instance segmentation sentinel2
-https://github.com/chrieke/InstanceSegmentation_Sentinel2
+```bash
+python -m dataset.EuroSAT.generate_train_test_split /path/to/eurosat/folders
+```
 
-Water finder
-https://github.com/isikdogan/deepwatermap
+Feed the `train.csv` path to the train script
 
-Dino v2
-https://github.com/facebookresearch/dinov2
-https://arxiv.org/pdf/2210.02745.pdf
+## Train linear classifier with EuroSAT
 
-Sentinel2 benchmark
-https://arxiv.org/pdf/2210.02745.pdf
+Follow the jupyter notebook `finetune_eurosat-linear.ipynb` to replicate it locally with EuroSAT.
 
-color indices for remote sensing:
-https://github.com/awesome-spectral-indices/awesome-spectral-indices
+## Train linear classifier with aquatic vegetation dataset
 
-Interesting libraries for loading images from Sentinel-2:
+First the data needs to be downloaded runnning:
 
-Maybe:
-https://pro.arcgis.com/en/pro-app/latest/arcpy/get-started/what-is-arcpy-.htm
+```bash
+python -m scripts.download
+```
 
-This looks really nice as it also allows to overlay on maps natively:
-https://geopandas.org/en/stable/getting\_started/introduction.html
+You have to confiure the main function to fit your local system and also need an account for DHub from the Copernicus
+program.
 
-This project is lit!
-https://github.com/satellite-image-deep-learning/techniques
-https://github.com/acgeospatial/awesome-earthobservation-code
+Once you have the dataset downloaded you can run the finetunning process.
 
-Lots of datasets!
-https://github.com/Seyed-Ali-Ahmadi/Awesome\_Satellite\_Benchmark\_Datasets
+Follow the jupyter notebook `finetune_mat-linear.ipynb` to replicate it locally with the local dataset.
 
+## Visualize dataset
 
-Interesting survery here:
-https://github.com/VIROBO-15/Transformer-in-Remote-Sensing
-
-To visualize custom maps:
-https://python-visualization.github.io/folium/quickstart.html
-https://github.com/giswqs/geemap
-
-
-Too many resources for satellite imaging:
-https://github.com/sacridini/Awesome-Geospatial
-
-Is this really useful?
-https://github.com/microsoft/torchgeo
-
-Hmmm video results....
-https://github.com/acgeospatial/awesome-earthobservation-code#visualisation
+Also in the `inference` folder couple of jupyter notebooks can be found that allows you to use the model to do image
+serach in a tile.
